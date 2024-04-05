@@ -19,11 +19,7 @@
 	on:keydown={() => (expanded = !expanded)}
 >
 	<div class="metadata">
-		<div>{label}</div>
-		<!-- <div class="source">{logItem.source}</div>
-		<div class="level">{logItem.level}</div>
-		<div class="time">@ {displayDate}</div>
-		<div class="flex"></div> -->
+		<span>{label}</span>
 	</div>
 	<div class="preview" class:expanded>
 		{logItem.data}
@@ -42,9 +38,6 @@
 		background-color: rgba(0, 0, 0, 0.05);
 	}
 
-	.root.info {
-		/* border-left-color: var(--text-secondary); */
-	}
 	.root.warn {
 		border-left-color: var(--text-warning);
 	}
@@ -55,24 +48,6 @@
 	.metadata {
 		display: flex;
 		font-size: 1.2rem;
-	}
-
-	.source {
-		color: #555;
-	}
-	.root.error .level {
-		color: var(--text-error);
-	}
-	.root.warn .level {
-		color: var(--text-warning);
-	}
-
-	.flex {
-		flex: 1;
-	}
-
-	.time {
-		color: #666;
 	}
 
 	.preview {

@@ -18,9 +18,7 @@
 		display: flex;
 		flex-direction: column;
 	}
-	.header {
-		/* height: 100px; */
-	}
+
 	.list {
 		overflow-y: auto;
 		flex: 1;

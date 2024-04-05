@@ -1,4 +1,4 @@
 export interface DeviceActor {
-  getDescription: any;
-  getRawPermissionsTable: any;
+	getDescription: unknown;
+	getRawPermissionsTable: unknown;
 }
