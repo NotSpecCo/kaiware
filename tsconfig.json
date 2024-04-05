@@ -1,0 +1,31 @@
+{
+	"extends": "@tsconfig/svelte/tsconfig.json",
+	"include": [
+		"src/renderer/src/env.d.ts",
+		"src/renderer/src/**/*",
+		"src/renderer/src/**/*.svelte",
+		"src/preload/*.d.ts",
+		"src/types"
+	],
+	"compilerOptions": {
+		"verbatimModuleSyntax": true,
+		"useDefineForClassFields": true,
+		"strict": true,
+		"strictNullChecks": true,
+		"allowJs": true,
+		"checkJs": true,
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"esModuleInterop": true,
+		"noImplicitAny": false,
+		"baseUrl": ".",
+		"paths": {
+			"$lib": ["./src/renderer/src/lib"],
+			"$lib/*": ["./src/renderer/src/lib/*"],
+			"$": ["./src/renderer/src"],
+			"$/*": ["./src/renderer/src/*"],
+			"$types": ["./src/types"],
+			"$types/*": ["./src/types/*"]
+		}
+	},
+	"references": [{ "path": "./tsconfig.node.json" }]
+}

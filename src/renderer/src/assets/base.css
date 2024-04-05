@@ -1,0 +1,54 @@
+:root {
+	--background: #fffcf9;
+	--accent-primary: #ccad8f;
+	--accent-primary: #8963ba;
+
+	--text-primary: rgba(0, 0, 0, 0.88);
+	--text-secondary: rgba(0, 0, 0, 0.5);
+	--text-tertiary: rgba(0, 0, 0, 0.3);
+	--text-accent: var(--accent-primary);
+
+	--text-warning: #ffca3a;
+	--text-error: #bf3f36;
+}
+
+html {
+	font-size: 10px;
+}
+body {
+	font-size: 1.6rem;
+	min-height: 100vh;
+	min-width: 100vw;
+	color: var(--text-primary);
+	background: var(--background);
+	line-height: 1.6;
+	font-family:
+		'SF Pro',
+		Inter,
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		'Fira Sans',
+		'Droid Sans',
+		'Helvetica Neue',
+		sans-serif;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	font-weight: normal;
+}
+
+ul {
+	list-style: none;
+}

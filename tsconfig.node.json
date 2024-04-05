@@ -1,0 +1,21 @@
+{
+	"include": ["electron.vite.config.*", "src/main/**/*", "src/preload/**/*", "src/types/**/*"],
+	"compilerOptions": {
+		"composite": true,
+		"types": ["electron-vite/node"],
+		"esModuleInterop": true,
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"strict": true,
+		"strictNullChecks": true,
+		"baseUrl": ".",
+		"paths": {
+			"$main": ["./src/main"],
+			"$main/*": ["./src/main/*"],
+			"$preload": ["./src/preload"],
+			"$preload/*": ["./src/preload/*"],
+			"$types": ["./src/types"],
+			"$types/*": ["./src/types/*"]
+		}
+	}
+}
