@@ -1,15 +1,19 @@
 :root {
-	--background: #fffcf9;
-	--accent-primary: #ccad8f;
-	--accent-primary: #8963ba;
+	--background: #181d26;
+	--panel-background: red;
+	--panel-background: #1f2633;
+	--accent-primary: #63ccca;
+	--accent-secondary: #8963ba;
 
-	--text-primary: rgba(0, 0, 0, 0.88);
-	--text-secondary: rgba(0, 0, 0, 0.5);
-	--text-tertiary: rgba(0, 0, 0, 0.3);
+	--text-primary: rgba(255, 255, 255, 0.88);
+	--text-secondary: rgba(255, 255, 255, 0.5);
+	--text-tertiary: rgba(255, 255, 255, 0.3);
 	--text-accent: var(--accent-primary);
 
-	--text-warning: #ffca3a;
-	--text-error: #bf3f36;
+	--text-warning: #f8c630;
+	--text-error: #ef8b4f;
+	--text-error: #e54f6d;
+	--text-success: #42b63e;
 }
 
 html {
@@ -21,7 +25,7 @@ body {
 	min-width: 100vw;
 	color: var(--text-primary);
 	background: var(--background);
-	line-height: 1.6;
+	line-height: 1.4;
 	font-family:
 		'SF Pro',
 		Inter,

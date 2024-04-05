@@ -29,8 +29,7 @@
 <style>
 	.root {
 		padding: 5px 10px;
-		/* margin-bottom: 5px; */
-		border-bottom: 1px solid #ddd;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 		border-left: 4px solid transparent;
 		cursor: pointer;
 	}
@@ -48,6 +47,7 @@
 	.metadata {
 		display: flex;
 		font-size: 1.2rem;
+		color: var(--text-secondary);
 	}
 
 	.preview {

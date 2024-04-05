@@ -5,8 +5,8 @@
 </script>
 
 <View>
-	<ViewHeader title="Settings" />
-	<ViewContent>Settings</ViewContent>
+	<ViewHeader title="Apps" />
+	<ViewContent>Apps</ViewContent>
 </View>
 
 <style>

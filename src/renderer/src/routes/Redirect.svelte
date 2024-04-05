@@ -4,5 +4,5 @@
 	// eslint-disable-next-line svelte/valid-compile
 	export let params = {};
 
-	replace('/logs');
+	replace('/apps');
 </script>

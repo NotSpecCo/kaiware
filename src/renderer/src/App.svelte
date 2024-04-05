@@ -1,21 +1,26 @@
 <script lang="ts">
 	import About from '$/routes/About.svelte';
+	import Apps from '$/routes/Apps.svelte';
+	import Debugger from '$/routes/Debugger.svelte';
+	import Device from '$/routes/Device.svelte';
 	import Settings from '$/routes/Settings.svelte';
-	import Titlebar from '$lib/components/Titlebar.svelte';
+	import Footer from '$lib/components/Footer.svelte';
+	import Header from '$lib/components/Header.svelte';
+	import Sidebar from '$lib/components/Sidebar.svelte';
 	import { logs } from '$lib/stores/logs';
 	import dayjs from 'dayjs';
 	import localizedFormat from 'dayjs/plugin/localizedFormat';
 	import { onMount } from 'svelte';
 	import Router from 'svelte-spa-router';
-	import Logs from './routes/Logs.svelte';
-	import Network from './routes/Network.svelte';
 	import Redirect from './routes/Redirect.svelte';
 
 	dayjs.extend(localizedFormat);
 
 	const routes = {
-		'/logs': Logs,
-		'/network': Network,
+		'/apps': Apps,
+		'/device': Device,
+		'/debugger': Debugger,
+		'/debugger/*': Debugger,
 		'/settings': Settings,
 		'/about': About,
 		'*': Redirect
@@ -28,10 +33,12 @@
 </script>
 
 <div class="root">
-	<Titlebar />
-	<div class="content">
+	<Header />
+	<div class="main">
+		<Sidebar />
 		<Router {routes} />
 	</div>
+	<Footer />
 </div>
 
 <style>
@@ -43,8 +50,9 @@
 		flex-direction: column;
 	}
 
-	.content {
+	.main {
 		min-height: 0;
 		flex: 1;
+		display: flex;
 	}
 </style>
