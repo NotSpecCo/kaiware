@@ -1,7 +1,7 @@
 <script lang="ts">
 	import dayjs from 'dayjs';
 	import { onMount } from 'svelte';
-	import LogViewer from './routes/LogViewer.svelte';
+	import Logs from './routes/Logs.svelte';
 	import Redirect from './routes/Redirect.svelte';
 
 	import Titlebar from '$lib/components/Titlebar.svelte';
@@ -11,7 +11,7 @@
 	dayjs.extend(localizedFormat);
 
 	const routes = {
-		'/logs': LogViewer,
+		'/logs': Logs,
 		'*': Redirect
 	};
 

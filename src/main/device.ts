@@ -51,7 +51,7 @@ export class Device {
 	}
 
 	private getWebappsActor(): Promise<AppsActor> {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			this._client.getWebapps((err: any, result: AppsActor) => {
 				resolve(result);
 			});

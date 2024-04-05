@@ -1,4 +1,4 @@
-import { LogItem } from '$types/LogItem.js';
+import type { LogItem } from '$types/LogItem.js';
 import { electronAPI } from '@electron-toolkit/preload';
 import { contextBridge, ipcRenderer } from 'electron';
 
@@ -38,8 +38,8 @@ if (process.contextIsolated) {
 		console.error(error);
 	}
 } else {
-	// @ts-expect-error (define in dts)
-	window.electron = electronAPI;
-	// @ts-expect-error (define in dts)
-	window.api = api;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	(window as any).electron = electronAPI;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	(window as any).api = api;
 }
