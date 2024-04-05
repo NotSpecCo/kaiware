@@ -23,7 +23,8 @@ export default defineConfig({
 			alias: {
 				$: path.resolve(__dirname, './src/renderer/src'),
 				$lib: path.resolve(__dirname, './src/renderer/src/lib'),
-				$types: path.resolve(__dirname, './src/types')
+				$types: path.resolve(__dirname, './src/types'),
+				$assets: path.resolve(__dirname, './src/assets')
 			}
 		}
 	}
