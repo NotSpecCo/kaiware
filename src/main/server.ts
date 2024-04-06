@@ -10,33 +10,33 @@ type Message =
 	| { type: 'add-log'; data: LogItem }
 	| { type: 'clear-logs' };
 
-export class RemoteDevice {
-	private static server = createServer();
-	private static wss = new WebSocketServer({ noServer: true });
-	private static socket: ExtendedWebSocket | null = null;
+const server = createServer();
+const wss = new WebSocketServer({ noServer: true });
+let socket: ExtendedWebSocket | null = null;
 
-	static start() {
-		this.server.on('upgrade', async (request, socket, head) => {
+export const RemoteDevice = {
+	start(): void {
+		server.on('upgrade', async (request, socket, head) => {
 			// Only allow one connection at a time
-			if (this.wss.clients.size > 0) {
+			if (wss.clients.size > 0) {
 				socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
 				socket.destroy();
 				return;
 			}
 
-			this.wss.handleUpgrade(request, socket, head, (ws) => {
+			wss.handleUpgrade(request, socket, head, (ws) => {
 				const socket = ws as ExtendedWebSocket;
 				socket.device = {
 					id: '123',
 					name: 'Unnamed Device'
 				};
 
-				this.wss.emit('connection', socket, request);
+				wss.emit('connection', socket, request);
 			});
 		});
 
-		this.wss.on('connection', (ws: ExtendedWebSocket) => {
-			this.socket = ws;
+		wss.on('connection', (ws: ExtendedWebSocket) => {
+			socket = ws;
 
 			ws.on('message', (data) => {
 				const message = JSON.parse(data.toString()) as Message;
@@ -59,21 +59,21 @@ export class RemoteDevice {
 			ws.on('error', console.error);
 			ws.on('close', () => {
 				console.log('Client disconnected');
-				this.server.closeAllConnections();
-				this.socket = null;
+				server.closeAllConnections();
+				socket = null;
 			});
 		});
 
-		this.server.listen(3000);
-	}
+		server.listen(3000);
+	},
 
-	static handleDeviceInfoUpdate(data: { id: string; name: string }) {
-		this.socket!.device = data;
+	handleDeviceInfoUpdate(data: { id: string; name: string }): void {
+		socket!.device = data;
 
 		BrowserWindow.getAllWindows()[0]?.webContents.send('device-on-update', data);
-	}
+	},
 
-	static async handleAddLog(data: LogItem) {
+	async handleAddLog(data: LogItem): Promise<void> {
 		const schema = z.object({
 			level: z.enum(['info', 'warn', 'error']),
 			source: z.string(),
@@ -89,27 +89,27 @@ export class RemoteDevice {
 
 		const result = schema.safeParse(data);
 		if (!result.success) {
-			this.socket!.send(JSON.stringify(formatValidationError(result.error.issues)));
+			socket!.send(JSON.stringify(formatValidationError(result.error.issues)));
 			return;
 		}
 
 		try {
 			await database.logs.addLog(result.data);
-			this.socket!.send(JSON.stringify({ success: true }));
+			socket!.send(JSON.stringify({ success: true }));
 		} catch (err) {
-			this.socket!.send(JSON.stringify({ success: false, error: (err as Error).message }));
+			socket!.send(JSON.stringify({ success: false, error: (err as Error).message }));
 		}
-	}
+	},
 
-	static async handleClearLogs() {
+	async handleClearLogs(): Promise<void> {
 		try {
 			await database.logs.clear();
-			this.socket!.send(JSON.stringify({ success: true }));
+			socket!.send(JSON.stringify({ success: true }));
 		} catch (err) {
-			this.socket!.send(JSON.stringify({ success: false, error: (err as Error).message }));
+			socket!.send(JSON.stringify({ success: false, error: (err as Error).message }));
 		}
 	}
-}
+};
 
 type ExtendedWebSocket = WebSocket & {
 	device: {
