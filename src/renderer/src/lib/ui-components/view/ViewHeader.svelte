@@ -11,7 +11,7 @@
 
 <style>
 	.root {
-		padding: 15px 15px 10px 15px;
+		padding: 10px 15px 5px 15px;
 		display: flex;
 		align-items: center;
 	}

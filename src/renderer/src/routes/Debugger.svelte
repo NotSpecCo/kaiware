@@ -19,6 +19,14 @@
 
 <View>
 	<ViewHeader title="Remote Debugger">
+		<!-- <a
+			href="/debugger/elements"
+			use:link
+			class="nav-link"
+			class:active={$location === '/debugger/elements'}
+		>
+			Elements
+		</a> -->
 		<a
 			href="/debugger/logs"
 			use:link
@@ -27,6 +35,14 @@
 		>
 			Logs
 		</a>
+		<!-- <a
+			href="/debugger/console"
+			use:link
+			class="nav-link"
+			class:active={$location === '/debugger/console'}
+		>
+			Console
+		</a> -->
 		<a
 			href="/debugger/network"
 			use:link

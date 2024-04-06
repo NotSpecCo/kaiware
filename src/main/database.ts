@@ -35,20 +35,22 @@ const db = knex({
 });
 
 export const database = {
-	getLogs: async () => {
-		return db<LogItem>('logs').select('*').orderBy('timestamp', 'desc');
-	},
-	addLog: async (log: Omit<LogItem, 'id'>) => {
-		const newLog = (await db<LogItem>('logs').insert(log, '*')).at(0);
-		BrowserWindow.getAllWindows()[0]?.webContents.send('logs-on-add', newLog);
-	},
-	clear: async () => {
-		await db<LogItem>('logs').delete();
-		BrowserWindow.getAllWindows()[0]?.webContents.send('logs-on-clear');
+	logs: {
+		getLogs: async () => {
+			return db<LogItem>('logs').select('*').orderBy('timestamp', 'desc');
+		},
+		addLog: async (log: Omit<LogItem, 'id'>) => {
+			const newLog = (await db<LogItem>('logs').insert(log, '*')).at(0);
+			BrowserWindow.getAllWindows()[0]?.webContents.send('logs-on-add', newLog);
+		},
+		clear: async () => {
+			await db<LogItem>('logs').delete();
+			BrowserWindow.getAllWindows()[0]?.webContents.send('logs-on-clear');
+		}
 	}
 };
 
 export function registerDatabaseHandlers() {
-	ipcMain.handle('logs-get', database.getLogs);
-	ipcMain.handle('logs-add', (_, log) => database.addLog(log));
+	ipcMain.handle('logs-get', database.logs.getLogs);
+	ipcMain.handle('logs-add', (_, log) => database.logs.addLog(log));
 }

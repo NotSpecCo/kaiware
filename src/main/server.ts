@@ -12,10 +12,10 @@ export function startServer() {
 
 	app.post('/api/logs/clear', async (req, res) => {
 		try {
-			await database.clear();
+			await database.logs.clear();
 			res.status(200).send();
 		} catch (err) {
-			res.status(500).send((err as Error).message);
+			res.status(500).send({ error: (err as Error).message });
 		}
 	});
 
@@ -39,11 +39,11 @@ export function startServer() {
 				return res.status(400).send(formatValidationError(result.error.issues));
 			}
 
-			await database.addLog(result.data);
+			await database.logs.addLog(result.data);
 
 			res.status(201).send();
 		} catch (err) {
-			res.status(500).send((err as Error).message);
+			res.status(500).send({ error: (err as Error).message });
 		}
 	});
 
@@ -54,10 +54,10 @@ export function startServer() {
 
 function formatValidationError(issues: z.ZodIssue[]) {
 	return issues.reduce(
-		(acc: { errors: { [key: string]: string } }, issue) => {
-			acc.errors[issue.path.join('.')] = issue.message;
+		(acc: { error: { [key: string]: string } }, issue) => {
+			acc.error[issue.path.join('.')] = issue.message;
 			return acc;
 		},
-		{ errors: {} }
+		{ error: {} }
 	);
 }
