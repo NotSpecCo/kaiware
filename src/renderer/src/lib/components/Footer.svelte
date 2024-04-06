@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { IconSize } from '$lib/enums/iconSize';
+	import { IconSize } from '$shared/enums/iconSize';
 	import Icon from '$lib/ui-components/icons/Icon.svelte';
 	import IconUsb from '~icons/ion/usb';
 </script>

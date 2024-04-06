@@ -1,10 +1,10 @@
+import { RemoteDevice } from '$main/server.js';
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import { BrowserWindow, app, ipcMain, shell } from 'electron';
 import { join } from 'path';
 import icon from '../../resources/icon.png?asset';
 import { initDatabase, registerDatabaseHandlers } from './database.js';
 import { Device } from './device.js';
-import { startServer } from './server.js';
 
 function createWindow(): void {
 	// Create the browser window.
@@ -48,7 +48,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
 	initDatabase();
-	startServer();
+	RemoteDevice.start();
 
 	// Set app user model id for windows
 	electronApp.setAppUserModelId('com.electron');

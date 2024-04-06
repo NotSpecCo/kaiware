@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Color } from '$lib/enums/color';
-	import { IconSize } from '$lib/enums/iconSize';
+	import { Color } from '$shared/enums/color';
+	import { IconSize } from '$shared/enums/iconSize';
 
 	export let size: IconSize = IconSize.Medium;
 	export let color: Color | string = Color.Primary;

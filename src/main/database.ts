@@ -1,4 +1,4 @@
-import { LogItem } from '$types/LogItem.js';
+import { LogItem } from '$shared/types/LogItem.js';
 import { BrowserWindow, ipcMain } from 'electron';
 import knex from 'knex';
 

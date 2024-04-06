@@ -1,5 +1,5 @@
 {
-	"include": ["electron.vite.config.*", "src/main/**/*", "src/preload/**/*", "src/types/**/*"],
+	"include": ["electron.vite.config.*", "src/main/**/*", "src/preload/**/*", "src/shared/**/*"],
 	"compilerOptions": {
 		"composite": true,
 		"types": ["electron-vite/node"],
@@ -14,8 +14,8 @@
 			"$main/*": ["./src/main/*"],
 			"$preload": ["./src/preload"],
 			"$preload/*": ["./src/preload/*"],
-			"$types": ["./src/types"],
-			"$types/*": ["./src/types/*"]
+			"$shared": ["./src/shared"],
+			"$shared/*": ["./src/shared/*"]
 		}
 	}
 }

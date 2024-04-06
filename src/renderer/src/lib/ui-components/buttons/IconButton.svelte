@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Color } from '$lib/enums/color';
-	import { IconSize } from '$lib/enums/iconSize';
+	import { Color } from '$shared/enums/color';
+	import { IconSize } from '$shared/enums/iconSize';
 	import Icon from '$lib/ui-components/icons/Icon.svelte';
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

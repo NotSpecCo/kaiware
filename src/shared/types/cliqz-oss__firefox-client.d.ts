@@ -1,6 +1,6 @@
 declare module '@cliqz-oss/firefox-client' {
-	import { AppsActor } from '$types/AppsActor.ts';
-	import { DeviceActor } from '$types/DeviceActor.ts';
+	import { AppsActor } from '$shared/types/AppsActor.ts';
+	import { DeviceActor } from '$shared/types/DeviceActor.ts';
 
 	export default class FirefoxClient {
 		constructor();

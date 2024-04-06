@@ -1,5 +1,5 @@
-import type { DeviceApp } from '$types/DeviceApp';
-import type { DeviceInfo } from '$types/DeviceInfo';
+import type { DeviceApp } from '$shared/types/DeviceApp';
+import type { DeviceInfo } from '$shared/types/DeviceInfo';
 
 export class KaiDevice {
 	static getInfo(): Promise<DeviceInfo> {

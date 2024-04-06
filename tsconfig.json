@@ -5,7 +5,8 @@
 		"src/renderer/src/**/*",
 		"src/renderer/src/**/*.svelte",
 		"src/preload/*.d.ts",
-		"src/types"
+		"src/types",
+		"src/shared/**/*"
 	],
 	"compilerOptions": {
 		"verbatimModuleSyntax": true,
@@ -23,8 +24,10 @@
 			"$lib/*": ["./src/renderer/src/lib/*"],
 			"$": ["./src/renderer/src"],
 			"$/*": ["./src/renderer/src/*"],
-			"$types": ["./src/types"],
-			"$types/*": ["./src/types/*"]
+			"$shared": ["./src/shared"],
+			"$shared/*": ["./src/shared/*"],
+			"$preload": ["./src/preload"],
+			"$preload/*": ["./src/preload/*"]
 		}
 	},
 	"references": [{ "path": "./tsconfig.node.json" }]

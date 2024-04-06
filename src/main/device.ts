@@ -1,7 +1,7 @@
-import { AppsActor } from '$types/AppsActor.js';
-import { DeviceActor } from '$types/DeviceActor.js';
+import { AppsActor } from '$shared/types/AppsActor.js';
+import { DeviceActor } from '$shared/types/DeviceActor.js';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DeviceInfo } from '$types/DeviceInfo.js';
+import { DeviceInfo } from '$shared/types/DeviceInfo.js';
 import FirefoxClient from '@cliqz-oss/firefox-client';
 import { promisify } from 'util';
 

@@ -1,4 +1,4 @@
-import type { LogItem } from '$types/LogItem.js';
+import type { LogItem } from '$shared/types/LogItem.js';
 import { electronAPI } from '@electron-toolkit/preload';
 import { contextBridge, ipcRenderer } from 'electron';
 

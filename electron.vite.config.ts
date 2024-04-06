@@ -10,7 +10,7 @@ export default defineConfig({
 			alias: {
 				$main: path.resolve(__dirname, './src/main'),
 				$preload: path.resolve(__dirname, './src/preload'),
-				$types: path.resolve(__dirname, './src/types')
+				$shared: path.resolve(__dirname, './src/shared')
 			}
 		}
 	},
@@ -23,8 +23,8 @@ export default defineConfig({
 			alias: {
 				$: path.resolve(__dirname, './src/renderer/src'),
 				$lib: path.resolve(__dirname, './src/renderer/src/lib'),
-				$types: path.resolve(__dirname, './src/types'),
-				$assets: path.resolve(__dirname, './src/assets')
+				$assets: path.resolve(__dirname, './src/renderer/assets'),
+				$shared: path.resolve(__dirname, './src/shared')
 			}
 		}
 	}

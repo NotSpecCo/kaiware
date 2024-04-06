@@ -1,4 +1,4 @@
-import type { LogItem } from '$types/LogItem';
+import type { LogItem } from '$shared/types/LogItem';
 import { writable } from 'svelte/store';
 
 function createStore() {
