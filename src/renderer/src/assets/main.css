@@ -1,1 +1,65 @@
-@import './base.css';
+:root {
+	--background-dark: #181d26;
+	--background-light: #1f2633;
+	--accent-primary: #63ccca;
+	--accent-secondary: #8963ba;
+
+	--text-primary: rgba(255, 255, 255, 0.88);
+	--text-secondary: rgba(255, 255, 255, 0.5);
+	--text-tertiary: rgba(255, 255, 255, 0.3);
+	--text-accent: var(--accent-primary);
+
+	--text-warning: #f8c630;
+	--text-error: #ef8b4f;
+	--text-error: #d64045;
+	--text-success: #42b63e;
+}
+
+html {
+	font-size: 10px;
+}
+body {
+	font-size: 1.6rem;
+	min-height: 100vh;
+	min-width: 100vw;
+	color: var(--text-primary);
+	background: var(--background-dark);
+	line-height: 1.4;
+	font-family:
+		'SF Pro',
+		Inter,
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		'Fira Sans',
+		'Droid Sans',
+		'Helvetica Neue',
+		sans-serif;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	font-weight: normal;
+}
+
+ul {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+a:hover {
+	text-decoration: underline;
+}

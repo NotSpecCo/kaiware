@@ -4,7 +4,7 @@
 
 <style>
 	.root {
-		background-color: var(--panel-background);
+		background-color: var(--background-light);
 		height: 100%;
 		width: 100%;
 		border-radius: 24px 0 0 24px;

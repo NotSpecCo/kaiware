@@ -10,19 +10,24 @@
 
 <div
 	class="root"
-	class:info={logItem.level === 'info'}
-	class:warn={logItem.level === 'warn'}
-	class:error={logItem.level === 'error'}
 	role="button"
 	tabindex="0"
 	on:click={() => (expanded = !expanded)}
 	on:keydown={() => (expanded = !expanded)}
 >
-	<div class="metadata">
-		<span>{label}</span>
-	</div>
-	<div class="preview" class:expanded>
-		{logItem.data}
+	<div
+		class="level-bar"
+		class:info={logItem.level === 'info'}
+		class:warn={logItem.level === 'warn'}
+		class:error={logItem.level === 'error'}
+	></div>
+	<div class="content">
+		<div class="metadata">
+			<span>{label}</span>
+		</div>
+		<div class="preview" class:expanded>
+			{logItem.data}
+		</div>
 	</div>
 </div>
 
@@ -30,24 +35,41 @@
 	.root {
 		padding: 5px 10px;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-		border-left: 4px solid transparent;
 		cursor: pointer;
+		position: relative;
+		display: flex;
+		font-size: 1.2rem;
 	}
 	.root:hover {
 		background-color: rgba(0, 0, 0, 0.05);
 	}
 
-	.root.warn {
-		border-left-color: var(--text-warning);
+	.level-bar {
+		width: 4px;
+		position: absolute;
+		top: 5px;
+		left: 0;
+		bottom: 5px;
+		border-radius: 2px;
 	}
-	.root.error {
-		border-left-color: var(--text-error);
+	.level-bar.info {
+		background-color: var(--text-tertiary);
+	}
+	.level-bar.warn {
+		background-color: var(--text-warning);
+	}
+	.level-bar.error {
+		background-color: var(--text-error);
+	}
+
+	.content {
+		flex: 1;
+		margin-left: 2px;
 	}
 
 	.metadata {
 		display: flex;
-		font-size: 1.2rem;
-		color: var(--text-secondary);
+		color: var(--text-tertiary);
 	}
 
 	.preview {
@@ -55,7 +77,6 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 		font-family: monospace;
-		font-size: 1.4rem;
 	}
 	.preview.expanded {
 		white-space: pre-wrap;
