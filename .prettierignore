@@ -2,4 +2,5 @@ out
 dist
 pnpm-lock.yaml
 package-lock.json
-LICENSE.md
+LICENSE
+**/*.md

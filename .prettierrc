@@ -1,7 +1,18 @@
 {
 	"useTabs": true,
+	"tabWidth": 4,
 	"singleQuote": true,
 	"trailingComma": "none",
 	"printWidth": 100,
-	"htmlWhitespaceSensitivity": "ignore"
+	"htmlWhitespaceSensitivity": "ignore",
+	"bracketSpacing": true,
+	"plugins": ["prettier-plugin-svelte"],
+	"overrides": [
+		{
+			"files": "*.yml",
+			"options": {
+				"tabWidth": 2
+			}
+		}
+	]
 }
