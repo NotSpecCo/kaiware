@@ -8,6 +8,3 @@
 	<ViewHeader title="Apps" />
 	<ViewContent>Apps</ViewContent>
 </View>
-
-<style>
-</style>

@@ -8,6 +8,3 @@
 	<ViewHeader title="Device" />
 	<ViewContent>Device</ViewContent>
 </View>
-
-<style>
-</style>

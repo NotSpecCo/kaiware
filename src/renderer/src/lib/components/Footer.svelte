@@ -1,13 +1,21 @@
 <script lang="ts">
-	import { IconSize } from '$shared/enums/iconSize';
+	import { device } from '$lib/stores/device';
 	import Icon from '$lib/ui-components/icons/Icon.svelte';
+	import { IconSize } from '$shared/enums/iconSize';
 	import IconUsb from '~icons/ion/usb';
+	import IconWifi from '~icons/ion/wifi';
 </script>
 
 <div class="root">
 	<div class="device">
-		<Icon size={IconSize.Smallest}><IconUsb /></Icon>
-		<div class="name">No device connected</div>
+		{#if $device?.connectionType === 'usb'}
+			<Icon size={IconSize.Smallest} color="var(--text-success)"><IconUsb /></Icon>
+		{:else if $device?.connectionType === 'wifi'}
+			<Icon size={IconSize.Smallest} color="var(--text-success)"><IconWifi /></Icon>
+		{:else}
+			<Icon size={IconSize.Smallest} color="var(--text-tertiary)"><IconWifi /></Icon>
+		{/if}
+		<div class="name">{$device?.name ?? 'No device connected'}</div>
 	</div>
 	<div class="flex"></div>
 	<div class="version">Kaiware v0.1.0</div>
@@ -27,7 +35,7 @@
 	}
 
 	.device > .name {
-		margin-left: 5px;
+		margin-left: 7px;
 	}
 
 	.flex {

@@ -8,6 +8,3 @@
 	<ViewHeader title="About" />
 	<ViewContent>About</ViewContent>
 </View>
-
-<style>
-</style>

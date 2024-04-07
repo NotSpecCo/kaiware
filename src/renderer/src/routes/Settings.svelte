@@ -8,6 +8,3 @@
 	<ViewHeader title="Settings" />
 	<ViewContent>Settings</ViewContent>
 </View>
-
-<style>
-</style>

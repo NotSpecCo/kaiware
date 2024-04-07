@@ -26,11 +26,16 @@
 	}
 </script>
 
-<div class:disabled style={`color: ${colorValue}; font-size: ${size}px;`}>
+<div class="root" class:disabled style={`color: ${colorValue}; font-size: ${size}px;`}>
 	<slot />
 </div>
 
 <style>
+	.root {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 	.disabled {
 		opacity: 0.2;
 	}

@@ -1,3 +1,4 @@
+import { ConnectedDevice } from '$shared/types/ConnectedDevice.js';
 import type { LogItem } from '$shared/types/LogItem.js';
 import { electronAPI } from '@electron-toolkit/preload';
 import { contextBridge, ipcRenderer } from 'electron';
@@ -19,7 +20,9 @@ export const api = {
 		installLocalApp: (url: string) => ipcRenderer.invoke('device-install-local', url),
 		uninstallApp: (appId: string) => ipcRenderer.invoke('device-uninstall', appId),
 		launchApp: (appId: string) => ipcRenderer.invoke('device-launch-app', appId),
-		closeApp: (appId: string) => ipcRenderer.invoke('device-close-app', appId)
+		closeApp: (appId: string) => ipcRenderer.invoke('device-close-app', appId),
+		onConnectionChange: (callback: (device: ConnectedDevice | null) => void) =>
+			ipcRenderer.on('device-on-connection-change', (_, device) => callback(device))
 	},
 	browser: {
 		openUrl: (url: string) => ipcRenderer.invoke('open-url', url),

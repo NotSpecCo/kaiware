@@ -1,115 +1,152 @@
+import { Browser } from '$main/browser.js';
 import { database } from '$main/database.js';
+import { isJson } from '$main/utils/isJson.js';
+import { ConnectedDevice } from '$shared/types/ConnectedDevice.js';
 import { LogItem } from '$shared/types/LogItem.js';
-import { BrowserWindow } from 'electron';
 import { createServer } from 'http';
 import { WebSocket, WebSocketServer } from 'ws';
 import { z } from 'zod';
 
 type Message =
-	| { type: 'update-device-info'; data: { id: string; name: string } }
+	| { type: 'update-device-info'; data: Omit<ConnectedDevice, 'connectionType'> }
 	| { type: 'add-log'; data: LogItem }
 	| { type: 'clear-logs' };
 
-const server = createServer();
+const httpServer = createServer();
 const wss = new WebSocketServer({ noServer: true });
-let socket: ExtendedWebSocket | null = null;
 
-export const RemoteDevice = {
-	start(): void {
-		server.on('upgrade', async (request, socket, head) => {
-			// Only allow one connection at a time
-			if (wss.clients.size > 0) {
-				socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
-				socket.destroy();
-				return;
-			}
+export function startServer() {
+	httpServer.listen(3000);
+}
 
-			wss.handleUpgrade(request, socket, head, (ws) => {
-				const socket = ws as ExtendedWebSocket;
-				socket.device = {
-					id: '123',
-					name: 'Unnamed Device'
-				};
+export function stopServer() {
+	httpServer.closeAllConnections();
+	Browser.updateConnectedDevice(null);
+}
 
-				wss.emit('connection', socket, request);
-			});
-		});
+httpServer.on('upgrade', async (request, socket, head) => {
+	// Only allow one connection at a time
+	if (wss.clients.size > 0) {
+		socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+		socket.destroy();
+		return;
+	}
 
-		wss.on('connection', (ws: ExtendedWebSocket) => {
-			socket = ws;
+	wss.handleUpgrade(request, socket, head, (ws) => {
+		wss.emit('connection', ws, request);
+	});
+});
 
-			ws.on('message', (data) => {
-				const message = JSON.parse(data.toString()) as Message;
-				console.log('onmessage', message);
+wss.on('connection', (ws: WebSocket) => {
+	console.log('Device connected');
 
-				switch (message.type) {
-					case 'update-device-info':
-						this.handleDeviceInfoUpdate(message.data);
-						break;
-					case 'add-log':
-						this.handleAddLog(message.data);
-						break;
-					case 'clear-logs':
-						this.handleClearLogs();
-						break;
-					default:
-						console.log('Unknown message type', message);
-				}
-			});
-			ws.on('error', console.error);
-			ws.on('close', () => {
-				console.log('Client disconnected');
-				server.closeAllConnections();
-				socket = null;
-			});
-		});
+	const socket = ws as ExtendedWebSocket;
+	socket.device = {
+		id: 'unknown-device',
+		name: 'Unknown Device'
+	};
 
-		server.listen(3000);
-	},
+	Browser.updateConnectedDevice({
+		connectionType: 'wifi',
+		...socket.device
+	});
 
-	handleDeviceInfoUpdate(data: { id: string; name: string }): void {
-		socket!.device = data;
+	socket.on('message', (message) => {
+		const schema = z
+			.string()
+			.refine((val) => isJson(val), 'Must be a valid JSON string')
+			.transform((val) => JSON.parse(val))
+			.pipe(
+				z.object({
+					type: z.enum(['update-device-info', 'add-log', 'clear-logs']),
+					data: z.unknown().optional()
+				})
+			);
 
-		BrowserWindow.getAllWindows()[0]?.webContents.send('device-on-update', data);
-	},
+		const result = schema.safeParse(message.toString());
 
-	async handleAddLog(data: LogItem): Promise<void> {
-		const schema = z.object({
-			level: z.enum(['info', 'warn', 'error']),
-			source: z.string(),
-			data: z.string(),
-			timestamp: z
-				.string()
-				.refine(
-					(val) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(val),
-					'Must be in ISO 8601 format. example: 2024-04-05T00:51:08.639Z'
-				)
-				.default(() => new Date().toISOString())
-		});
-
-		const result = schema.safeParse(data);
 		if (!result.success) {
-			socket!.send(JSON.stringify(formatValidationError(result.error.issues)));
+			socket.send(JSON.stringify(formatValidationError(result.error.issues)));
 			return;
 		}
 
-		try {
-			await database.logs.addLog(result.data);
-			socket!.send(JSON.stringify({ success: true }));
-		} catch (err) {
-			socket!.send(JSON.stringify({ success: false, error: (err as Error).message }));
-		}
-	},
+		const messageData = result.data as Message;
+		console.log('Device message:', messageData);
 
-	async handleClearLogs(): Promise<void> {
-		try {
-			await database.logs.clear();
-			socket!.send(JSON.stringify({ success: true }));
-		} catch (err) {
-			socket!.send(JSON.stringify({ success: false, error: (err as Error).message }));
-		}
+		if (messageData.type === 'update-device-info')
+			handleDeviceInfoUpdate(socket, messageData.data);
+		else if (messageData.type === 'add-log') handleAddLog(socket, messageData.data);
+		else if (messageData.type === 'clear-logs') handleClearLogs(socket);
+	});
+
+	socket.on('error', (err) => {
+		console.log('Device error:', err);
+	});
+
+	socket.on('close', () => {
+		console.log('Device disconnected');
+		stopServer();
+	});
+});
+
+function handleDeviceInfoUpdate(
+	socket: ExtendedWebSocket,
+	data: Omit<ConnectedDevice, 'connectionType'>
+): void {
+	const schema = z.object({
+		id: z.string(),
+		name: z.string()
+	});
+
+	const result = schema.safeParse(data);
+	if (!result.success) {
+		socket.send(JSON.stringify(formatValidationError(result.error.issues)));
+		return;
 	}
-};
+
+	socket.device = data;
+	Browser.updateConnectedDevice({
+		connectionType: 'wifi',
+		...data
+	});
+}
+
+async function handleAddLog(socket: ExtendedWebSocket, data: LogItem): Promise<void> {
+	const schema = z.object({
+		level: z.enum(['info', 'warn', 'error']),
+		source: z.string(),
+		data: z.string(),
+		timestamp: z
+			.string()
+			.refine(
+				(val) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(val),
+				'Must be in ISO 8601 format. example: 2024-04-05T00:51:08.639Z'
+			)
+			.default(() => new Date().toISOString())
+	});
+
+	const result = schema.safeParse(data);
+	if (!result.success) {
+		socket.send(JSON.stringify(formatValidationError(result.error.issues)));
+		return;
+	}
+
+	try {
+		await database.logs.addLog(result.data);
+		socket.send(JSON.stringify({ success: true }));
+	} catch (err) {
+		socket.send(JSON.stringify({ success: false, error: (err as Error).message }));
+	}
+}
+
+async function handleClearLogs(socket: ExtendedWebSocket): Promise<void> {
+	try {
+		await database.logs.clear();
+		socket.send(JSON.stringify({ success: true }));
+	} catch (err) {
+		socket.send(JSON.stringify({ success: false, error: (err as Error).message }));
+	}
+}
 
 type ExtendedWebSocket = WebSocket & {
 	device: {
