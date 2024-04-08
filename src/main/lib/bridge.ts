@@ -1,9 +1,9 @@
-import { database } from '$main/database.js';
-import { server } from '$main/server.js';
+import { database } from '$main/lib/database.js';
+import { server } from '$main/lib/server.js';
+import { Channel } from '$shared/enums/channel.js';
 import { MessageType } from '$shared/enums/messageType.js';
 import { ConnectedDevice } from '$shared/types/ConnectedDevice.js';
 import { BrowserWindow, ipcMain } from 'electron';
-import { Channel } from '../shared/enums/channel.js';
 
 export function registerHandlers() {
 	// Logs

@@ -1,6 +1,6 @@
-import { Browser } from '$main/bridge.js';
-import { database } from '$main/database.js';
-import { isJson } from '$main/utils/isJson.js';
+import { Browser } from '$main/lib/bridge.js';
+import { database } from '$main/lib/database.js';
+import { isJson } from '$main/lib/isJson.js';
 import { MessageType } from '$shared/enums/messageType.js';
 import { ConnectedDevice } from '$shared/types/ConnectedDevice.js';
 import { LogItem } from '$shared/types/LogItem.js';

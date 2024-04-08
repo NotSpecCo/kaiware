@@ -1,10 +1,10 @@
-import { registerHandlers } from '$main/bridge.js';
-import { server } from '$main/server.js';
+import { registerHandlers } from '$main/lib/bridge.js';
+import { initDatabase } from '$main/lib/database.js';
+import { server } from '$main/lib/server.js';
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import { BrowserWindow, app, shell } from 'electron';
 import { join } from 'path';
 import icon from '../../resources/icon.png?asset';
-import { initDatabase } from './database.js';
 
 function createWindow(): void {
 	// Create the browser window.
