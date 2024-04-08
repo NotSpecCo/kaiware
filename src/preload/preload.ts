@@ -9,13 +9,16 @@ export const api = {
 	getLogs: (): Promise<LogItem[]> => ipcRenderer.invoke(Channel.GetLogs),
 	// addLog: (log: LogItem): Promise<void> => ipcRenderer.invoke('logs-add', log),
 	clearLogs: (): Promise<void> => ipcRenderer.invoke(Channel.ClearLogs),
+	getElements: (): Promise<string> => ipcRenderer.invoke(Channel.GetElements),
 
 	// Events
 	onNewLog: (callback: (log: LogItem) => void) =>
 		ipcRenderer.on(Channel.OnNewLog, (_, log) => callback(log)),
 	onClearLogs: (callback: () => void) => ipcRenderer.on(Channel.OnClearLogs, () => callback()),
 	onDeviceInfoChange: (callback: (device: ConnectedDevice | null) => void) =>
-		ipcRenderer.on(Channel.OnDeviceInfoChange, (_, device) => callback(device))
+		ipcRenderer.on(Channel.OnDeviceInfoChange, (_, device) => callback(device)),
+	onElementsChange: (callback: (htmlString: string) => void) =>
+		ipcRenderer.on(Channel.OnElementsChange, (_, htmlString) => callback(htmlString))
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

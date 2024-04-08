@@ -7,13 +7,11 @@
 	import Footer from '$lib/components/Footer.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
-	import { logs } from '$lib/stores/logs';
 	import dayjs from 'dayjs';
 	import localizedFormat from 'dayjs/plugin/localizedFormat';
 	import hljs from 'highlight.js';
 	import hljsJson from 'highlight.js/lib/languages/json';
 	import hljsXml from 'highlight.js/lib/languages/xml';
-	import { onMount } from 'svelte';
 	import Router from 'svelte-spa-router';
 	import Redirect from './routes/Redirect.svelte';
 
@@ -31,11 +29,6 @@
 		'/about': About,
 		'*': Redirect
 	};
-
-	onMount(async () => {
-		window.electron.ipcRenderer.send('ping');
-		logs.load();
-	});
 </script>
 
 <div class="root">

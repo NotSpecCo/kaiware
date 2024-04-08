@@ -1,6 +1,11 @@
 <script lang="ts">
 	import LogRow from '$lib/components/LogRow.svelte';
-	import { logs } from '$lib/stores/logs';
+	import { logs } from '$lib/stores/devTools';
+	import { onMount } from 'svelte';
+
+	onMount(async () => {
+		logs.load();
+	});
 </script>
 
 <div class="root">

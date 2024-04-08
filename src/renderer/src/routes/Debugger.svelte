@@ -3,6 +3,7 @@
 	import ViewContent from '$lib/ui-components/view/ViewContent.svelte';
 	import ViewHeader from '$lib/ui-components/view/ViewHeader.svelte';
 	import Router, { link, location, replace } from 'svelte-spa-router';
+	import Elements from './Elements.svelte';
 	import Logs from './Logs.svelte';
 	import Network from './Network.svelte';
 
@@ -12,6 +13,7 @@
 
 	const prefix = '/debugger';
 	const routes = {
+		'/elements': Elements,
 		'/logs': Logs,
 		'/network': Network
 	};
@@ -19,14 +21,14 @@
 
 <View>
 	<ViewHeader title="Remote Debugger">
-		<!-- <a
+		<a
 			href="/debugger/elements"
 			use:link
 			class="nav-link"
 			class:active={$location === '/debugger/elements'}
 		>
 			Elements
-		</a> -->
+		</a>
 		<a
 			href="/debugger/logs"
 			use:link
