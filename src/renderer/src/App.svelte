@@ -2,19 +2,9 @@
 	import Footer from '$lib/components/Footer.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
-	import dayjs from 'dayjs';
-	import localizedFormat from 'dayjs/plugin/localizedFormat';
-	import hljs from 'highlight.js';
-	import hljsJson from 'highlight.js/lib/languages/json';
-	import hljsXml from 'highlight.js/lib/languages/xml';
 	import Router from 'svelte-spa-router';
 	import wrap from 'svelte-spa-router/wrap';
 	import Redirect from './routes/Redirect.svelte';
-
-	hljs.registerLanguage('json', hljsJson);
-	hljs.registerLanguage('html', hljsXml);
-
-	dayjs.extend(localizedFormat);
 
 	const routes = {
 		'/apps': wrap({
