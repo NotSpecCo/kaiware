@@ -4,7 +4,7 @@ import { writable } from 'svelte/store';
 function createStore() {
 	const { subscribe, set } = writable<ConnectedDevice | null>(null);
 
-	window.api.kaiDevice.onConnectionChange((device) => set(device));
+	window.api.onDeviceInfoChange((device) => set(device));
 
 	function reset() {
 		set(null);

@@ -1,7 +1,8 @@
 /// <reference types="svelte" />
 /// <reference types="vite/client" />
 /// <reference types="unplugin-icons/types/svelte" />
-import { api } from './preload/index';
+
+import { api } from '$preload/preload';
 
 declare global {
 	interface Window {

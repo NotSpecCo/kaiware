@@ -15,7 +15,13 @@ export default defineConfig({
 		}
 	},
 	preload: {
-		plugins: [externalizeDepsPlugin()]
+		plugins: [externalizeDepsPlugin()],
+		resolve: {
+			alias: {
+				$preload: path.resolve(__dirname, './src/preload'),
+				$shared: path.resolve(__dirname, './src/shared')
+			}
+		}
 	},
 	renderer: {
 		plugins: [svelte(), Icons({ compiler: 'svelte' })],

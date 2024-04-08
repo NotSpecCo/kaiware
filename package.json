@@ -30,6 +30,7 @@
 		"dayjs": "^1.11.10",
 		"express": "^4.19.2",
 		"express-ws": "^5.0.2",
+		"highlight.js": "^11.9.0",
 		"knex": "^3.1.0",
 		"sqlite3": "5.1.6",
 		"svelte-spa-router": "^4.0.1",

@@ -1,11 +1,11 @@
 {
 	"extends": "@tsconfig/svelte/tsconfig.json",
 	"include": [
-		"src/renderer/src/env.d.ts",
+		"src/renderer/src/*.d.ts",
 		"src/renderer/src/**/*",
 		"src/renderer/src/**/*.svelte",
 		"src/preload/*.d.ts",
-		"src/types",
+		"src/types/**/*",
 		"src/shared/**/*"
 	],
 	"compilerOptions": {

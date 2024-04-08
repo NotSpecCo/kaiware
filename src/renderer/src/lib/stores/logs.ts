@@ -5,14 +5,12 @@ function createStore() {
 	const { subscribe, set, update } = writable<LogItem[]>([]);
 
 	async function load(): Promise<void> {
-		const logs = await window.api.logs.getLogs();
+		const logs = await window.api.getLogs();
 		set(logs);
-
-		window.api.logs.onNewLog((log) => {
+		window.api.onNewLog((log) => {
 			update((previous) => [log, ...previous]);
 		});
-
-		window.api.logs.onClearLogs(() => {
+		window.api.onClearLogs(() => {
 			set([]);
 		});
 	}

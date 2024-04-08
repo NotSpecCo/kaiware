@@ -10,9 +10,15 @@
 	import { logs } from '$lib/stores/logs';
 	import dayjs from 'dayjs';
 	import localizedFormat from 'dayjs/plugin/localizedFormat';
+	import hljs from 'highlight.js';
+	import hljsJson from 'highlight.js/lib/languages/json';
+	import hljsXml from 'highlight.js/lib/languages/xml';
 	import { onMount } from 'svelte';
 	import Router from 'svelte-spa-router';
 	import Redirect from './routes/Redirect.svelte';
+
+	hljs.registerLanguage('json', hljsJson);
+	hljs.registerLanguage('html', hljsXml);
 
 	dayjs.extend(localizedFormat);
 

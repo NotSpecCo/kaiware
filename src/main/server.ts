@@ -1,6 +1,7 @@
-import { Browser } from '$main/browser.js';
+import { Browser } from '$main/bridge.js';
 import { database } from '$main/database.js';
 import { isJson } from '$main/utils/isJson.js';
+import { MessageType } from '$shared/enums/messageType.js';
 import { ConnectedDevice } from '$shared/types/ConnectedDevice.js';
 import { LogItem } from '$shared/types/LogItem.js';
 import { createServer } from 'http';
@@ -8,21 +9,28 @@ import { WebSocket, WebSocketServer } from 'ws';
 import { z } from 'zod';
 
 type Message =
-	| { type: 'update-device-info'; data: Omit<ConnectedDevice, 'connectionType'> }
-	| { type: 'add-log'; data: LogItem }
-	| { type: 'clear-logs' };
+	| { type: MessageType.OnUpdateDeviceInfo; data: Omit<ConnectedDevice, 'connectionType'> }
+	| { type: MessageType.OnAddLog; data: LogItem }
+	| { type: MessageType.OnClearLogs };
 
 const httpServer = createServer();
 const wss = new WebSocketServer({ noServer: true });
 
-export function startServer() {
-	httpServer.listen(3000);
-}
+export const server = {
+	startServer: () => httpServer.listen(3000),
+	stopServer: () => {
+		httpServer.closeAllConnections();
+		Browser.updateConnectedDevice(null);
+	},
+	sendMessageToDevice: (type: MessageType, data?: unknown) => {
+		const socket = wss.clients.values().next().value as ExtendedWebSocket;
+		if (!socket) {
+			throw new Error('No device connected');
+		}
 
-export function stopServer() {
-	httpServer.closeAllConnections();
-	Browser.updateConnectedDevice(null);
-}
+		socket.send(JSON.stringify({ type, data }));
+	}
+};
 
 httpServer.on('upgrade', async (request, socket, head) => {
 	// Only allow one connection at a time
@@ -58,7 +66,7 @@ wss.on('connection', (ws: WebSocket) => {
 			.transform((val) => JSON.parse(val))
 			.pipe(
 				z.object({
-					type: z.enum(['update-device-info', 'add-log', 'clear-logs']),
+					type: z.nativeEnum(MessageType),
 					data: z.unknown().optional()
 				})
 			);
@@ -73,10 +81,10 @@ wss.on('connection', (ws: WebSocket) => {
 		const messageData = result.data as Message;
 		console.log('Device message:', messageData);
 
-		if (messageData.type === 'update-device-info')
+		if (messageData.type === MessageType.OnUpdateDeviceInfo)
 			handleDeviceInfoUpdate(socket, messageData.data);
-		else if (messageData.type === 'add-log') handleAddLog(socket, messageData.data);
-		else if (messageData.type === 'clear-logs') handleClearLogs(socket);
+		else if (messageData.type === MessageType.OnAddLog) handleAddLog(socket, messageData.data);
+		else if (messageData.type === MessageType.OnClearLogs) handleClearLogs(socket);
 	});
 
 	socket.on('error', (err) => {
@@ -85,7 +93,7 @@ wss.on('connection', (ws: WebSocket) => {
 
 	socket.on('close', () => {
 		console.log('Device disconnected');
-		stopServer();
+		server.stopServer();
 	});
 });
 

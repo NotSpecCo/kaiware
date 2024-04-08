@@ -1,3 +1,4 @@
+import 'highlight.js/styles/stackoverflow-dark.css';
 import './assets/main.css';
 
 import App from './App.svelte';

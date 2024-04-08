@@ -1,5 +1,5 @@
 import { LogItem } from '$shared/types/LogItem.js';
-import { BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow } from 'electron';
 import knex from 'knex';
 
 export async function initDatabase() {
@@ -49,8 +49,3 @@ export const database = {
 		}
 	}
 };
-
-export function registerDatabaseHandlers() {
-	ipcMain.handle('logs-get', database.logs.getLogs);
-	ipcMain.handle('logs-add', (_, log) => database.logs.addLog(log));
-}
