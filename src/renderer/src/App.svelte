@@ -3,28 +3,20 @@
 	import Header from '$lib/components/Header.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import Router from 'svelte-spa-router';
-	import wrap from 'svelte-spa-router/wrap';
+	import About from './routes/About.svelte';
+	import Apps from './routes/Apps.svelte';
+	import Debugger from './routes/Debugger.svelte';
+	import Device from './routes/Device.svelte';
 	import Redirect from './routes/Redirect.svelte';
+	import Settings from './routes/Settings.svelte';
 
 	const routes = {
-		'/apps': wrap({
-			asyncComponent: () => import('$/routes/Apps.svelte')
-		}),
-		'/device': wrap({
-			asyncComponent: () => import('$/routes/Device.svelte')
-		}),
-		'/debugger': wrap({
-			asyncComponent: () => import('$/routes/Debugger.svelte')
-		}),
-		'/debugger/*': wrap({
-			asyncComponent: () => import('$/routes/Debugger.svelte')
-		}),
-		'/settings': wrap({
-			asyncComponent: () => import('$/routes/Settings.svelte')
-		}),
-		'/about': wrap({
-			asyncComponent: () => import('$/routes/About.svelte')
-		}),
+		'/apps': Apps,
+		'/device': Device,
+		'/debugger': Debugger,
+		'/debugger/*': Debugger,
+		'/settings': Settings,
+		'/about': About,
 		'*': Redirect
 	};
 </script>

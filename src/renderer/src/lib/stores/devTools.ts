@@ -37,8 +37,7 @@ function createElementsStore() {
 	const { subscribe, set } = writable<string>(testhtml);
 
 	async function load(): Promise<void> {
-		const htmlString = await window.api.getElements();
-		set(htmlString);
+		window.api.refreshElements();
 	}
 
 	function clear() {

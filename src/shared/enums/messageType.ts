@@ -1,6 +1,11 @@
 export enum MessageType {
-	GetElements = 'get-elements',
-	OnUpdateDeviceInfo = 'update-device-info',
-	OnAddLog = 'add-log',
-	OnClearLogs = 'clear-logs'
+	// Outgoing
+	RefreshElements = 'refresh-elements',
+	RefreshDeviceInfo = 'refresh-device-info',
+
+	// Incoming
+	DeviceInfoUpdate = 'device-info-update',
+	NewLog = 'new-log',
+	ClearLogs = 'clear-logs',
+	ElementsUpdate = 'elements-update'
 }

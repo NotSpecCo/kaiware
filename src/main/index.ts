@@ -1,4 +1,4 @@
-import { registerHandlers } from '$main/lib/bridge.js';
+import { registerChannelHandlers } from '$main/lib/bridge.js';
 import { initDatabase } from '$main/lib/database.js';
 import { server } from '$main/lib/server.js';
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
@@ -61,7 +61,7 @@ app.whenReady().then(() => {
 	});
 
 	// IPC handlers
-	registerHandlers();
+	registerChannelHandlers();
 
 	createWindow();
 

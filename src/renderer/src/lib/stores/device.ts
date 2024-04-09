@@ -1,8 +1,8 @@
-import type { ConnectedDevice } from '$shared/types/ConnectedDevice';
+import type { DeviceInfo } from '$shared/types/DeviceInfo';
 import { writable } from 'svelte/store';
 
 function createStore() {
-	const { subscribe, set } = writable<ConnectedDevice | null>(null);
+	const { subscribe, set } = writable<DeviceInfo | null>(null);
 
 	window.api.onDeviceInfoChange((device) => set(device));
 

@@ -1,5 +1,4 @@
 import { LogItem } from '$shared/types/LogItem.js';
-import { BrowserWindow } from 'electron';
 import knex from 'knex';
 
 export async function initDatabase() {
@@ -39,13 +38,12 @@ export const database = {
 		getLogs: async () => {
 			return db<LogItem>('logs').select('*').orderBy('timestamp', 'desc');
 		},
-		addLog: async (log: Omit<LogItem, 'id'>) => {
+		addLog: async (log: Omit<LogItem, 'id'>): Promise<LogItem> => {
 			const newLog = (await db<LogItem>('logs').insert(log, '*')).at(0);
-			BrowserWindow.getAllWindows()[0]?.webContents.send('logs-on-add', newLog);
+			return newLog as LogItem;
 		},
 		clear: async () => {
 			await db<LogItem>('logs').delete();
-			BrowserWindow.getAllWindows()[0]?.webContents.send('logs-on-clear');
 		}
 	}
 };
