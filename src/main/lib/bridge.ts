@@ -3,6 +3,7 @@ import { server } from '$main/lib/server.js';
 import { Channel } from '$shared/enums/channel.js';
 import { DeviceInfo } from '$shared/types/DeviceInfo.js';
 import { LogItem } from '$shared/types/LogItem.js';
+import { formatCode } from '$shared/utils/formatCode.js';
 import { BrowserWindow, ipcMain } from 'electron';
 
 export function registerChannelHandlers() {
@@ -21,8 +22,9 @@ server.onReceiveDeviceInfo((device) => {
 	Browser.updateDeviceInfo(device);
 });
 
-server.onReceiveElements((htmlStr) => {
-	Browser.updateElements(htmlStr);
+server.onReceiveElements(async (htmlStr) => {
+	const formatted = await formatCode(htmlStr, 'html');
+	Browser.updateElements(formatted);
 });
 
 server.onReceiveLog(async (log) => {
