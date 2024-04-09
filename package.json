@@ -1,10 +1,17 @@
 {
 	"name": "kaiware",
-	"version": "1.0.0",
-	"description": "Logging library",
+	"version": "0.1.0",
+	"description": "A desktop application to manage your KaiOS device.",
 	"main": "./out/main/index.js",
-	"author": "example.com",
-	"homepage": "https://electron-vite.org",
+	"author": {
+		"name": "Garrett Downs",
+		"url": "https://nothingspecial.io"
+	},
+	"homepage": "https://github.com/nothingspecialdev/kaiware",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nothingspecialdev/kaiware"
+	},
 	"type": "module",
 	"scripts": {
 		"format": "prettier --check .",
