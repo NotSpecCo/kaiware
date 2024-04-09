@@ -11,7 +11,9 @@
 	<div class="nav">
 		<a href="/apps" use:link class:active={$location === '/apps'}>Apps</a>
 		<a href="/device" use:link class:active={$location === '/device'}>Device</a>
-		<a href="/debugger" use:link class:active={$location.startsWith('/debugger')}>Debugger</a>
+		<a href="/dev-tools" use:link class:active={$location.startsWith('/dev-tools')}>
+			Dev Tools
+		</a>
 		<div class="divider"></div>
 		<a href="/settings" use:link class:active={$location === '/settings'}>Settings</a>
 	</div>
@@ -57,6 +59,7 @@
 	.nav > a {
 		display: block;
 		padding: 5px 10px;
+		font-size: 1.6rem;
 		border-left: 5px solid transparent;
 	}
 	.nav > a.active {
