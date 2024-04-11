@@ -2,7 +2,9 @@ import { Browser } from '$main/lib/bridge.js';
 import { isJson } from '$main/lib/isJson.js';
 import { MessageType } from '$shared/enums/messageType.js';
 import { DeviceInfo } from '$shared/types/DeviceInfo.js';
+import { DeviceStorage } from '$shared/types/DeviceStorage.js';
 import { LogItem } from '$shared/types/LogItem.js';
+import { Message } from '$shared/types/Message.js';
 import { createServer } from 'http';
 import { WebSocket, WebSocketServer } from 'ws';
 import { z } from 'zod';
@@ -17,6 +19,8 @@ export const server = {
 	// Sending messages to the device
 	requestDeviceInfo: () => sendMessageToDevice(MessageType.RefreshDeviceInfo),
 	requestElements: () => sendMessageToDevice(MessageType.RefreshElements),
+	requestStorage: (storageType: 'local' | 'session') =>
+		sendMessageToDevice(MessageType.RefreshStorage, { storageType }),
 
 	// Receiving messages from the device
 	onReceiveLog: (callback: (log: LogItem) => void) => {
@@ -36,17 +40,14 @@ export const server = {
 		listeners.set(MessageType.NewLog, { dataSchema, callback });
 	},
 	onReceiveDeviceInfo: (callback: (device: DeviceInfo) => void) => {
-		const dataSchema = z.object({
-			id: z.string(),
-			name: z.string()
-		});
+		const dataSchema = z
+			.object({
+				id: z.string(),
+				name: z.string()
+			})
+			.transform((val) => ({ ...val, connectionType: 'wifi' }));
 
-		const cb = (device: DeviceInfo): void => {
-			device.connectionType = 'wifi';
-			callback(device);
-		};
-
-		listeners.set(MessageType.DeviceInfoUpdate, { dataSchema, callback: cb });
+		listeners.set(MessageType.DeviceInfoUpdate, { dataSchema, callback });
 	},
 	onReceiveElements: (callback: (htmlStr: string) => void) => {
 		const dataSchema = z.string();
@@ -55,6 +56,14 @@ export const server = {
 	onReceiveClearLogs: (callback: () => void) => {
 		const dataSchema = z.undefined();
 		listeners.set(MessageType.ClearLogs, { dataSchema, callback });
+	},
+	onReceiveStorage: (callback: (storage: DeviceStorage) => void) => {
+		const dataSchema = z.object({
+			type: z.enum(['local', 'session']),
+			data: z.record(z.unknown()).optional()
+		});
+
+		listeners.set(MessageType.StorageUpdate, { dataSchema, callback });
 	}
 };
 
@@ -66,11 +75,6 @@ function sendMessageToDevice(type: MessageType, data?: unknown) {
 
 	socket.send(JSON.stringify({ type, data }));
 }
-
-type Message = {
-	type: MessageType;
-	data?: unknown;
-};
 
 const httpServer = createServer();
 const wss = new WebSocketServer({ noServer: true });
@@ -108,7 +112,7 @@ wss.on('connection', (ws: WebSocket) => {
 		...socket.device
 	});
 
-	socket.on('message', async (message) => {
+	socket.on('message', async (rawMessage) => {
 		const schema = z
 			.string()
 			.refine((val) => isJson(val), 'Must be a valid JSON string')
@@ -116,38 +120,41 @@ wss.on('connection', (ws: WebSocket) => {
 			.pipe(
 				z.object({
 					type: z.nativeEnum(MessageType),
-					data: z.unknown().optional()
+					data: z.any().optional()
 				})
 			);
 
-		const validateMessage = schema.safeParse(message.toString());
+		const validateMessage = schema.safeParse(rawMessage.toString());
 		if (!validateMessage.success) {
-			socket.send(JSON.stringify(formatValidationError(validateMessage.error.issues)));
+			socket.send(JSON.stringify(formatValidationErrorMessage(validateMessage.error.issues)));
 			return;
 		}
 
-		const messageData = validateMessage.data as Message;
-		console.log('Device message:', messageData);
+		const message = validateMessage.data as Message<unknown>;
+		console.log('Received message:', message);
 
-		const listener = listeners.get(messageData.type);
-		if (!listener) return;
+		const listener = listeners.get(message.type);
+		if (!listener) {
+			console.log('No listener found for message type:', message.type);
+			return;
+		}
 
-		const validateResult = listener.dataSchema.safeParse(messageData?.data);
-		if (!validateResult.success) {
-			socket.send(JSON.stringify(formatValidationError(validateResult.error.issues)));
+		const validateData = listener.dataSchema.safeParse(message.data);
+		if (!validateData.success) {
+			socket.send(JSON.stringify(formatValidationErrorMessage(validateData.error.issues)));
 			return;
 		}
 
 		try {
-			await listener.callback(validateResult.data);
-			socket.send(JSON.stringify({ success: true }));
+			await listener.callback(validateData.data);
+			console.log('Message processed successfully');
 		} catch (err) {
-			socket.send(JSON.stringify({ success: false, error: (err as Error).message }));
+			console.log('Error processing message:', err);
 		}
 	});
 
 	socket.on('error', (err) => {
-		console.log('Device error:', err);
+		console.error('Device error:', err);
 	});
 
 	socket.on('close', () => {
@@ -155,7 +162,7 @@ wss.on('connection', (ws: WebSocket) => {
 		server.stopServer();
 	});
 
-	// Get initial device info on connect
+	// Get device info on initial connection
 	server.requestDeviceInfo();
 });
 
@@ -166,12 +173,17 @@ type ExtendedWebSocket = WebSocket & {
 	};
 };
 
-function formatValidationError(issues: z.ZodIssue[]) {
-	return issues.reduce(
-		(acc: { error: string; data: { [key: string]: string } }, issue) => {
-			acc.data[issue.path.join('.')] = issue.message;
-			return acc;
-		},
-		{ error: 'ValidationError', data: {} }
-	);
+function formatValidationErrorMessage(issues: z.ZodIssue[]): Message<ErrorMessageData> {
+	return {
+		type: MessageType.Error,
+		data: {
+			name: 'ValidationError',
+			errors: issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`)
+		}
+	};
 }
+
+type ErrorMessageData = {
+	name?: string;
+	errors: string[];
+};

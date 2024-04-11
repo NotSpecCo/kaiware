@@ -6,6 +6,7 @@
 	import Elements from './Elements.svelte';
 	import Logs from './Logs.svelte';
 	import Network from './Network.svelte';
+	import Storage from './Storage.svelte';
 
 	if ($location === '/dev-tools') {
 		replace('/dev-tools/elements');
@@ -15,7 +16,8 @@
 	const routes = {
 		'/elements': Elements,
 		'/logs': Logs,
-		'/network': Network
+		'/network': Network,
+		'/storage': Storage
 	};
 </script>
 
@@ -37,14 +39,6 @@
 		>
 			Logs
 		</a>
-		<!-- <a
-			href="/dev-tools/console"
-			use:link
-			class="nav-link"
-			class:active={$location === '/dev-tools/console'}
-		>
-			Console
-		</a> -->
 		<a
 			href="/dev-tools/network"
 			use:link
@@ -52,6 +46,14 @@
 			class:active={$location === '/dev-tools/network'}
 		>
 			Network
+		</a>
+		<a
+			href="/dev-tools/storage"
+			use:link
+			class="nav-link"
+			class:active={$location === '/dev-tools/storage'}
+		>
+			Storage
 		</a>
 	</ViewHeader>
 	<ViewContent>

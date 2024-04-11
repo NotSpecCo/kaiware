@@ -1,5 +1,6 @@
 import { Channel } from '$shared/enums/channel.js';
 import { DeviceInfo } from '$shared/types/DeviceInfo.js';
+import { DeviceStorage } from '$shared/types/DeviceStorage.js';
 import type { LogItem } from '$shared/types/LogItem.js';
 import { electronAPI } from '@electron-toolkit/preload';
 import { contextBridge, ipcRenderer } from 'electron';
@@ -9,8 +10,9 @@ export const api = {
 	getLogs: (): Promise<LogItem[]> => ipcRenderer.invoke(Channel.GetLogs),
 	// addLog: (log: LogItem): Promise<void> => ipcRenderer.invoke('logs-add', log),
 	clearLogs: (): Promise<void> => ipcRenderer.invoke(Channel.ClearLogs),
-	refreshElements: (): Promise<string> => ipcRenderer.invoke(Channel.RefreshElements),
-	refreshDeviceInfo: (): Promise<DeviceInfo> => ipcRenderer.invoke(Channel.RefreshDeviceInfo),
+	refreshElements: (): Promise<void> => ipcRenderer.invoke(Channel.RefreshElements),
+	refreshDeviceInfo: (): Promise<void> => ipcRenderer.invoke(Channel.RefreshDeviceInfo),
+	refreshStorage: (): Promise<void> => ipcRenderer.invoke(Channel.RefreshStorage),
 
 	// Events
 	onNewLog: (callback: (log: LogItem) => void) =>
@@ -19,7 +21,9 @@ export const api = {
 	onDeviceInfoChange: (callback: (device: DeviceInfo | null) => void) =>
 		ipcRenderer.on(Channel.DeviceInfoChange, (_, device) => callback(device)),
 	onElementsChange: (callback: (htmlString: string) => void) =>
-		ipcRenderer.on(Channel.ElementsChange, (_, htmlString) => callback(htmlString))
+		ipcRenderer.on(Channel.ElementsChange, (_, htmlString) => callback(htmlString)),
+	onStorageChange: (callback: (storage: DeviceStorage) => void) =>
+		ipcRenderer.on(Channel.StorageChange, (_, storage) => callback(storage))
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

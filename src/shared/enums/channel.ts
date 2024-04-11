@@ -3,7 +3,9 @@ export enum Channel {
 	ClearLogs = 'clear-logs',
 	RefreshElements = 'refresh-elements',
 	RefreshDeviceInfo = 'refresh-device-info',
+	RefreshStorage = 'refresh-storage',
 	ElementsChange = 'elements-change',
+	StorageChange = 'storage-change',
 	NewLog = 'new-log',
 	DeviceInfoChange = 'device-info-change'
 }
