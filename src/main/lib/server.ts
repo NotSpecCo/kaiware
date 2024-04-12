@@ -1,10 +1,10 @@
 import { Browser } from '$main/lib/bridge.js';
 import { isJson } from '$main/lib/isJson.js';
 import { MessageType } from '$shared/enums/messageType.js';
-import { DeviceInfo } from '$shared/types/DeviceInfo.js';
 import { DeviceStorage } from '$shared/types/DeviceStorage.js';
-import { LogItem } from '$shared/types/LogItem.js';
 import { Message } from '$shared/types/Message.js';
+import type { Log } from '@nothing-special/kaiware-lib/types';
+import { DeviceInfo } from '@nothing-special/kaiware-lib/types';
 import { createServer } from 'http';
 import { WebSocket, WebSocketServer } from 'ws';
 import { z } from 'zod';
@@ -23,7 +23,7 @@ export const server = {
 		sendMessageToDevice(MessageType.RefreshStorage, { storageType }),
 
 	// Receiving messages from the device
-	onReceiveLog: (callback: (log: LogItem) => void) => {
+	onReceiveLog: (callback: (log: Log) => void) => {
 		const dataSchema = z.object({
 			level: z.enum(['info', 'warn', 'error']),
 			source: z.string(),

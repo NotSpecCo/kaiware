@@ -1,4 +1,4 @@
-import type { DeviceInfo } from '$shared/types/DeviceInfo';
+import type { DeviceInfo } from '@nothing-special/kaiware-lib/types';
 import { writable } from 'svelte/store';
 
 function createStore() {

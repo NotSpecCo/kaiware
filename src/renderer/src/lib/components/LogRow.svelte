@@ -1,7 +1,8 @@
 <script lang="ts">
+	import type { Log } from '@nothing-special/kaiware-lib/types';
 	import dayjs from 'dayjs';
-	import type { LogItem } from 'src/types/LogItem';
-	export let logItem: LogItem;
+
+	export let logItem: Log;
 
 	const displayDate = dayjs(logItem.timestamp).format('LTS');
 	const label = `${logItem.source} @ ${displayDate}`;

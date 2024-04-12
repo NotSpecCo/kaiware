@@ -1,24 +1,27 @@
-import { LogItem } from '$shared/types/LogItem.js';
+import { LogLevel } from '@nothing-special/kaiware-lib/enums';
+import type { Log } from '@nothing-special/kaiware-lib/types';
 import knex from 'knex';
 
 export async function initDatabase() {
 	await db.migrate.latest();
 
-	const existingLogs = await db<LogItem>('logs').count({ count: '*' }).first();
+	const existingLogs = await db<Log>('logs').count({ count: '*' }).first();
 	if (existingLogs?.count !== 0) return;
 
-	const logs: Omit<LogItem, 'id' | 'timestamp'>[] = Array.from({ length: 50 }, (_, i) => ({
+	const logs: Omit<Log, 'id' | 'timestamp'>[] = Array.from({ length: 50 }, (_, i) => ({
 		source: 'my-app',
-		level: i % 3 === 0 ? 'error' : i % 3 === 1 ? 'warn' : 'info',
-		data: JSON.stringify({
-			name: 'Error',
-			message: 'some not so bad error happend',
-			stack: `Error: some not so bad error happend\n    at <anonymous>:1:16`
-		}),
+		level: i % 3 === 0 ? LogLevel.Error : i % 3 === 1 ? LogLevel.Warn : LogLevel.Info,
+		data: [
+			JSON.stringify({
+				name: 'Error',
+				message: 'some not so bad error happend',
+				stack: `Error: some not so bad error happend\n    at <anonymous>:1:16`
+			})
+		],
 		timestamp: new Date().toISOString()
 	}));
 
-	await db<LogItem>('logs').insert(logs);
+	await db<Log>('logs').insert(logs);
 }
 
 const db = knex({
@@ -36,14 +39,14 @@ const db = knex({
 export const database = {
 	logs: {
 		getLogs: async () => {
-			return db<LogItem>('logs').select('*').orderBy('timestamp', 'desc');
+			return db<Log>('logs').select('*').orderBy('timestamp', 'desc');
 		},
-		addLog: async (log: Omit<LogItem, 'id'>): Promise<LogItem> => {
-			const newLog = (await db<LogItem>('logs').insert(log, '*')).at(0);
-			return newLog as LogItem;
+		addLog: async (log: Omit<Log, 'id'>): Promise<Log> => {
+			const newLog = (await db<Log>('logs').insert(log, '*')).at(0);
+			return newLog as Log;
 		},
 		clear: async () => {
-			await db<LogItem>('logs').delete();
+			await db<Log>('logs').delete();
 		}
 	}
 };

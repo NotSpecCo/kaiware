@@ -1,5 +1,6 @@
 import type { DeviceStorage } from '$shared/types/DeviceStorage';
-import type { LogItem } from '$shared/types/LogItem';
+import type { Log } from '@nothing-special/kaiware-lib/types';
+
 import { writable } from 'svelte/store';
 
 export const logs = createLogsStore();
@@ -8,7 +9,7 @@ export const localStorage = createLocalStorageStore();
 export const sessionStorage = createSessionStorageStore();
 
 function createLogsStore() {
-	const { subscribe, set, update } = writable<LogItem[]>([]);
+	const { subscribe, set, update } = writable<Log[]>([]);
 
 	async function load(): Promise<void> {
 		const logs = await window.api.getLogs();

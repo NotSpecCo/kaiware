@@ -1,13 +1,12 @@
 import { Channel } from '$shared/enums/channel.js';
-import { DeviceInfo } from '$shared/types/DeviceInfo.js';
-import { DeviceStorage } from '$shared/types/DeviceStorage.js';
-import type { LogItem } from '$shared/types/LogItem.js';
+import type { DeviceStorage } from '$shared/types/DeviceStorage.js';
 import { electronAPI } from '@electron-toolkit/preload';
+import type { DeviceInfo, Log } from '@nothing-special/kaiware-lib/types';
 import { contextBridge, ipcRenderer } from 'electron';
 
 export const api = {
 	// Methods
-	getLogs: (): Promise<LogItem[]> => ipcRenderer.invoke(Channel.GetLogs),
+	getLogs: (): Promise<Log[]> => ipcRenderer.invoke(Channel.GetLogs),
 	// addLog: (log: LogItem): Promise<void> => ipcRenderer.invoke('logs-add', log),
 	clearLogs: (): Promise<void> => ipcRenderer.invoke(Channel.ClearLogs),
 	refreshElements: (): Promise<void> => ipcRenderer.invoke(Channel.RefreshElements),
@@ -15,7 +14,7 @@ export const api = {
 	refreshStorage: (): Promise<void> => ipcRenderer.invoke(Channel.RefreshStorage),
 
 	// Events
-	onNewLog: (callback: (log: LogItem) => void) =>
+	onNewLog: (callback: (log: Log) => void) =>
 		ipcRenderer.on(Channel.NewLog, (_, log) => callback(log)),
 	onClearLogs: (callback: () => void) => ipcRenderer.on(Channel.ClearLogs, () => callback()),
 	onDeviceInfoChange: (callback: (device: DeviceInfo | null) => void) =>

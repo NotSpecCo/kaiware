@@ -1,10 +1,10 @@
 import { database } from '$main/lib/database.js';
 import { server } from '$main/lib/server.js';
 import { Channel } from '$shared/enums/channel.js';
-import { DeviceInfo } from '$shared/types/DeviceInfo.js';
 import { DeviceStorage } from '$shared/types/DeviceStorage.js';
-import { LogItem } from '$shared/types/LogItem.js';
 import { formatCode } from '$shared/utils/formatCode.js';
+import type { Log } from '@nothing-special/kaiware-lib/types';
+import { DeviceInfo } from '@nothing-special/kaiware-lib/types';
 import { BrowserWindow, ipcMain } from 'electron';
 
 export function registerChannelHandlers() {
@@ -55,7 +55,7 @@ export const Browser = {
 	updateStorage(storage: DeviceStorage) {
 		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.StorageChange, storage);
 	},
-	addLog(log: LogItem) {
+	addLog(log: Log) {
 		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.NewLog, log);
 	},
 	clearLogs() {
