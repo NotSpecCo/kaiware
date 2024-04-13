@@ -3,6 +3,7 @@ import { isJson } from '$main/lib/isJson.js';
 import { MessageType } from '$shared/enums/messageType.js';
 import { DeviceStorage } from '$shared/types/DeviceStorage.js';
 import { Message } from '$shared/types/Message.js';
+import { LogLevel } from '@nothing-special/kaiware-lib/enums';
 import type { Log } from '@nothing-special/kaiware-lib/types';
 import { DeviceInfo } from '@nothing-special/kaiware-lib/types';
 import { createServer } from 'http';
@@ -25,9 +26,9 @@ export const server = {
 	// Receiving messages from the device
 	onReceiveLog: (callback: (log: Log) => void) => {
 		const dataSchema = z.object({
-			level: z.enum(['info', 'warn', 'error']),
+			level: z.nativeEnum(LogLevel),
 			source: z.string(),
-			data: z.string(),
+			data: z.string().array(),
 			timestamp: z
 				.string()
 				.refine(

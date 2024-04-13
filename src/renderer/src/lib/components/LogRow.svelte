@@ -18,7 +18,7 @@
 >
 	<div
 		class="level-bar"
-		class:info={logItem.level === 'info'}
+		class:info={logItem.level === 'info' || logItem.level === 'debug'}
 		class:warn={logItem.level === 'warn'}
 		class:error={logItem.level === 'error'}
 	></div>
@@ -27,7 +27,9 @@
 			<span>{label}</span>
 		</div>
 		<div class="preview" class:expanded>
-			{logItem.data}
+			{#each logItem.data as data}
+				<span class="item">{typeof data === 'object' ? JSON.stringify(data) : data}</span>
+			{/each}
 		</div>
 	</div>
 </div>
@@ -81,5 +83,12 @@
 	}
 	.preview.expanded {
 		white-space: pre-wrap;
+	}
+
+	.item {
+		padding-right: 10px;
+	}
+	.item:last-of-type {
+		padding-right: 0px;
 	}
 </style>
