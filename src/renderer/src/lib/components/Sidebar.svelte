@@ -9,13 +9,27 @@
 	</div>
 	<div class="divider"></div>
 	<div class="nav">
-		<a href="/apps" use:link class:active={$location === '/apps'}>Apps</a>
-		<a href="/device" use:link class:active={$location === '/device'}>Device</a>
-		<a href="/dev-tools" use:link class:active={$location.startsWith('/dev-tools')}>
-			Dev Tools
+		<a href="/dashboard" use:link class:active={$location === '/dashboard'}>Dashboard</a>
+
+		<div class="divider named">Dev Tools</div>
+		<a href="/dev-tools/elements" use:link class:active={$location === '/dev-tools/elements'}>
+			Elements
 		</a>
-		<div class="divider"></div>
+		<a href="/dev-tools/logs" use:link class:active={$location === '/dev-tools/logs'}>Logs</a>
+		<a href="/dev-tools/network" use:link class:active={$location === '/dev-tools/network'}>
+			Network
+		</a>
+		<a href="/dev-tools/storage" use:link class:active={$location === '/dev-tools/storage'}>
+			Storage
+		</a>
+
+		<div class="divider named">Apps</div>
+		<a href="/app-store" use:link class:active={$location === '/app-store'}>App Store</a>
+		<!-- <a href="/device" use:link class:active={$location === '/device'}>Device</a> -->
+
+		<div class="divider named">Misc</div>
 		<a href="/settings" use:link class:active={$location === '/settings'}>Settings</a>
+		<a href="/about" use:link class:active={$location === '/about'}>About</a>
 	</div>
 </div>
 
@@ -34,9 +48,15 @@
 	}
 
 	.divider {
-		height: 1px;
-		background-color: rgba(255, 255, 255, 0.1);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 		margin: 10px 10px;
+	}
+
+	.divider.named {
+		font-size: 1.2rem;
+		font-weight: 600;
+		margin-bottom: 5px;
+		color: var(--text-secondary);
 	}
 
 	.logo {

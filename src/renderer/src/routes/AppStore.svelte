@@ -5,6 +5,6 @@
 </script>
 
 <View>
-	<ViewHeader title="Apps" />
-	<ViewContent>Apps</ViewContent>
+	<ViewHeader title="App Store" />
+	<ViewContent>App Store</ViewContent>
 </View>

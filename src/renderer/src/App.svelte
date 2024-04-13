@@ -4,14 +4,16 @@
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import Router from 'svelte-spa-router';
 	import About from './routes/About.svelte';
-	import Apps from './routes/Apps.svelte';
+	import AppStore from './routes/AppStore.svelte';
+	import Dashboard from './routes/Dashboard.svelte';
 	import DevTools from './routes/DevTools.svelte';
 	import Device from './routes/Device.svelte';
 	import Redirect from './routes/Redirect.svelte';
 	import Settings from './routes/Settings.svelte';
 
 	const routes = {
-		'/apps': Apps,
+		'/dashboard': Dashboard,
+		'/app-store': AppStore,
 		'/device': Device,
 		'/dev-tools': DevTools,
 		'/dev-tools/*': DevTools,
