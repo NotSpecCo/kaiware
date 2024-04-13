@@ -13,7 +13,7 @@
 
 	const routes = {
 		'/dashboard': Dashboard,
-		'/app-store': AppStore,
+		'/apps/store': AppStore,
 		'/device': Device,
 		'/dev-tools': DevTools,
 		'/dev-tools/*': DevTools,

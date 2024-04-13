@@ -24,7 +24,7 @@
 		</a>
 
 		<div class="divider named">Apps</div>
-		<a href="/app-store" use:link class:active={$location === '/app-store'}>App Store</a>
+		<a href="/apps/store" use:link class:active={$location === '/apps/store'}>App Store</a>
 		<!-- <a href="/device" use:link class:active={$location === '/device'}>Device</a> -->
 
 		<div class="divider named">Misc</div>
