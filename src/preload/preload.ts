@@ -11,7 +11,8 @@ export const api = {
 	clearLogs: (): Promise<void> => ipcRenderer.invoke(Channel.ClearLogs),
 	refreshElements: (): Promise<void> => ipcRenderer.invoke(Channel.RefreshElements),
 	refreshDeviceInfo: (): Promise<void> => ipcRenderer.invoke(Channel.RefreshDeviceInfo),
-	refreshStorage: (): Promise<void> => ipcRenderer.invoke(Channel.RefreshStorage),
+	refreshStorage: (storageType: 'local' | 'session'): Promise<void> =>
+		ipcRenderer.invoke(Channel.RefreshStorage, storageType),
 
 	// Events
 	onNewLog: (callback: (log: Log) => void) =>

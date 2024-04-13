@@ -40,7 +40,7 @@ function createLocalStorageStore() {
 	const { subscribe, set } = writable<DeviceStorage | null>(null);
 
 	function load(): void {
-		window.api.refreshStorage();
+		window.api.refreshStorage('local');
 	}
 
 	function clear(): void {
@@ -65,7 +65,7 @@ function createSessionStorageStore() {
 	const { subscribe, set } = writable<DeviceStorage | null>(null);
 
 	function load(): void {
-		window.api.refreshStorage();
+		window.api.refreshStorage('session');
 	}
 
 	function clear(): void {
