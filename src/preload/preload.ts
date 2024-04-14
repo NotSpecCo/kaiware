@@ -1,7 +1,7 @@
 import { Channel } from '$shared/enums/channel.js';
 import type { DeviceStorage } from '$shared/types/DeviceStorage.js';
 import { electronAPI } from '@electron-toolkit/preload';
-import type { DeviceInfo, Log } from '@nothing-special/kaiware-lib/types';
+import type { DeviceInfo, ElementStylesUpdate, Log } from '@nothing-special/kaiware-lib/types';
 import { contextBridge, ipcRenderer } from 'electron';
 
 export const api = {
@@ -13,6 +13,8 @@ export const api = {
 	refreshDeviceInfo: (): Promise<void> => ipcRenderer.invoke(Channel.RefreshDeviceInfo),
 	refreshStorage: (storageType: 'local' | 'session'): Promise<void> =>
 		ipcRenderer.invoke(Channel.RefreshStorage, storageType),
+	getElementStyles: (index: number): Promise<void> =>
+		ipcRenderer.invoke(Channel.GetElementStyles, index),
 
 	// Events
 	onNewLog: (callback: (log: Log) => void) =>
@@ -23,7 +25,9 @@ export const api = {
 	onElementsChange: (callback: (htmlString: string) => void) =>
 		ipcRenderer.on(Channel.ElementsChange, (_, htmlString) => callback(htmlString)),
 	onStorageChange: (callback: (storage: DeviceStorage) => void) =>
-		ipcRenderer.on(Channel.StorageChange, (_, storage) => callback(storage))
+		ipcRenderer.on(Channel.StorageChange, (_, storage) => callback(storage)),
+	onElementStylesChange: (callback: (data: ElementStylesUpdate) => void) =>
+		ipcRenderer.on(Channel.ElementStylesChange, (_, data) => callback(data))
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

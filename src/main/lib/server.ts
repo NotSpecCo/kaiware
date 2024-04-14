@@ -1,11 +1,9 @@
 import { Browser } from '$main/lib/bridge.js';
 import { isJson } from '$main/lib/isJson.js';
-import { MessageType } from '$shared/enums/messageType.js';
 import { DeviceStorage } from '$shared/types/DeviceStorage.js';
 import { Message } from '$shared/types/Message.js';
-import { LogLevel } from '@nothing-special/kaiware-lib/enums';
-import type { Log } from '@nothing-special/kaiware-lib/types';
-import { DeviceInfo } from '@nothing-special/kaiware-lib/types';
+import { LogLevel, MessageType } from '@nothing-special/kaiware-lib/enums';
+import type { DeviceInfo, ElementStylesUpdate, Log } from '@nothing-special/kaiware-lib/types';
 import { createServer } from 'http';
 import { WebSocket, WebSocketServer } from 'ws';
 import { z } from 'zod';
@@ -20,6 +18,8 @@ export const server = {
 	// Sending messages to the device
 	requestDeviceInfo: () => sendMessageToDevice(MessageType.RefreshDeviceInfo),
 	requestElements: () => sendMessageToDevice(MessageType.RefreshElements),
+	requestElementStyles: (index: number) =>
+		sendMessageToDevice(MessageType.GetElementStyles, { index }),
 	requestStorage: (storageType: 'local' | 'session') =>
 		sendMessageToDevice(MessageType.RefreshStorage, { storageType }),
 
@@ -65,6 +65,14 @@ export const server = {
 		});
 
 		listeners.set(MessageType.StorageUpdate, { dataSchema, callback });
+	},
+	onReceiveElementStyles: (callback: (styles: ElementStylesUpdate) => void) => {
+		const dataSchema = z.object({
+			index: z.number(),
+			styles: z.unknown()
+		});
+
+		listeners.set(MessageType.ElementStyleUpdate, { dataSchema, callback });
 	}
 };
 

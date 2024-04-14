@@ -12,24 +12,21 @@
 	{value}
 	style={width ? `width: ${width}` : ''}
 	on:input
+	on:keydown
 />
 
 <style>
 	input {
-		padding: 5px 10px;
+		padding: 3px 5px;
 		border: none;
-		border: 2px solid rgba(255, 255, 255, 0.15);
-		border-radius: 15px;
-		background-color: var(--background-light);
+		background-color: inherit;
 		color: var(--text-primary);
-		font-size: 1.4rem;
-		height: 30px;
 	}
 
 	input::placeholder {
 		color: var(--text-secondary);
 	}
 	input:focus {
-		outline: var(--accent-primary) solid 2px;
+		outline: var(--accent-primary) solid 1px;
 	}
 </style>

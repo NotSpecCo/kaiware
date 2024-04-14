@@ -3,7 +3,7 @@ import { server } from '$main/lib/server.js';
 import { Channel } from '$shared/enums/channel.js';
 import { DeviceStorage } from '$shared/types/DeviceStorage.js';
 import { formatCode } from '$shared/utils/formatCode.js';
-import type { Log } from '@nothing-special/kaiware-lib/types';
+import type { ElementStylesUpdate, Log } from '@nothing-special/kaiware-lib/types';
 import { DeviceInfo } from '@nothing-special/kaiware-lib/types';
 import { BrowserWindow, ipcMain } from 'electron';
 
@@ -18,6 +18,10 @@ export function registerChannelHandlers() {
 	ipcMain.handle(Channel.RefreshDeviceInfo, () => server.requestDeviceInfo());
 	ipcMain.handle(Channel.RefreshStorage, (_, storageType: 'local' | 'session') =>
 		server.requestStorage(storageType)
+	);
+
+	ipcMain.handle(Channel.GetElementStyles, (_, index: number) =>
+		server.requestElementStyles(index)
 	);
 }
 
@@ -45,12 +49,19 @@ server.onReceiveClearLogs(() => {
 	Browser.clearLogs();
 });
 
+server.onReceiveElementStyles((data: ElementStylesUpdate) => {
+	Browser.updateElementStyles(data);
+});
+
 export const Browser = {
 	updateDeviceInfo(device: DeviceInfo | null) {
 		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.DeviceInfoChange, device);
 	},
 	updateElements(htmlStr: string) {
 		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.ElementsChange, htmlStr);
+	},
+	updateElementStyles(data: ElementStylesUpdate) {
+		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.ElementStylesChange, data);
 	},
 	updateStorage(storage: DeviceStorage) {
 		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.StorageChange, storage);

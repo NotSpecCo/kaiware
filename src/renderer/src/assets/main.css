@@ -64,3 +64,8 @@ a {
 a:hover {
 	text-decoration: underline;
 }
+
+.hljs-name:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
