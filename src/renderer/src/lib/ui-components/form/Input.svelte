@@ -9,11 +9,12 @@
 	input {
 		padding: 5px 10px;
 		border: none;
-		border: 2px solid rgba(255, 255, 255, 0.1);
+		border: 2px solid rgba(255, 255, 255, 0.15);
 		border-radius: 15px;
 		background-color: var(--background-light);
 		color: var(--text-primary);
 		font-size: 1.4rem;
+		height: 30px;
 	}
 
 	input::placeholder {
