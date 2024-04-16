@@ -36,11 +36,7 @@ export const server = {
 	}
 };
 
-const listeners = new Map<
-	MessageType,
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	(message: Message<unknown>) => void
->();
+const listeners = new Map<MessageType, (message: Message<unknown>) => Promise<void>>();
 
 const socketServer = {
 	server: new WebSocketServer({ noServer: true }),
@@ -109,7 +105,7 @@ socketServer.server.on('connection', async (ws: WebSocket) => {
 	});
 
 	// Handle incoming messages that we didn't request
-	socket.on('message', (rawMessage: RawData) => {
+	socket.on('message', async (rawMessage: RawData) => {
 		const messageType = isJson(rawMessage.toString())
 			? (JSON.parse(rawMessage.toString()).type as MessageType)
 			: null;
@@ -118,8 +114,12 @@ socketServer.server.on('connection', async (ws: WebSocket) => {
 
 		const listener = listeners.get(messageType);
 		if (listener) {
-			const message = validateMessage<unknown>(messageType, rawMessage);
-			listener(message);
+			try {
+				const message = validateMessage<unknown>(messageType, rawMessage);
+				await listener(message);
+			} catch (err) {
+				console.log('Listener encountered an error:', err);
+			}
 		}
 	});
 });
