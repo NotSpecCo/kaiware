@@ -59,7 +59,7 @@ export const database = {
 
 const mappers = {
 	logEntityToLog: (log: LogEntity): Log => {
-		const data: unknown[] = JSON.parse(log.data).map((a: string) =>
+		const data: string[] = JSON.parse(log.data).map((a: string) =>
 			isJson(a) ? JSON.parse(a) : a
 		);
 

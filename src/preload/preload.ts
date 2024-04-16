@@ -1,33 +1,48 @@
 import { Channel } from '$shared/enums/channel.js';
 import type { DeviceStorage } from '$shared/types/DeviceStorage.js';
 import { electronAPI } from '@electron-toolkit/preload';
-import type { DeviceInfo, ElementStylesUpdate, Log } from '@nothing-special/kaiware-lib/types';
+import type {
+	GetDeviceInfoResPayload,
+	GetElementDataResPayload,
+	GetElementStylesResPayload,
+	Log
+} from '@nothing-special/kaiware-lib/types';
 import { contextBridge, ipcRenderer } from 'electron';
 
 export const api = {
 	// Methods
-	getLogs: (): Promise<Log[]> => ipcRenderer.invoke(Channel.GetLogs),
-	// addLog: (log: LogItem): Promise<void> => ipcRenderer.invoke('logs-add', log),
-	clearLogs: (): Promise<void> => ipcRenderer.invoke(Channel.ClearLogs),
-	refreshElements: (): Promise<void> => ipcRenderer.invoke(Channel.RefreshElements),
-	refreshDeviceInfo: (): Promise<void> => ipcRenderer.invoke(Channel.RefreshDeviceInfo),
-	refreshStorage: (storageType: 'local' | 'session'): Promise<void> =>
-		ipcRenderer.invoke(Channel.RefreshStorage, storageType),
-	getElementStyles: (index: number): Promise<void> =>
-		ipcRenderer.invoke(Channel.GetElementStyles, index),
+	async getLogs(): Promise<Log[]> {
+		return ipcRenderer.invoke(Channel.GetLogs);
+	},
+	clearLogs(): Promise<void> {
+		return ipcRenderer.invoke(Channel.ClearLogs);
+	},
+	async getDeviceInfo(): Promise<GetDeviceInfoResPayload | null> {
+		return ipcRenderer.invoke(Channel.GetDeviceInfo);
+	},
+	async getElements(): Promise<string> {
+		return ipcRenderer.invoke(Channel.GetElements);
+	},
+	async getElementStyles(index: number): Promise<GetElementStylesResPayload> {
+		return ipcRenderer.invoke(Channel.GetElementStyles, index);
+	},
+	async getElementData(index: number): Promise<GetElementDataResPayload> {
+		return ipcRenderer.invoke(Channel.GetElementStyles, index);
+	},
+	async getStorage(storageType: 'local' | 'session'): Promise<DeviceStorage> {
+		return ipcRenderer.invoke(Channel.GetStorage, storageType);
+	},
 
 	// Events
-	onNewLog: (callback: (log: Log) => void) =>
-		ipcRenderer.on(Channel.NewLog, (_, log) => callback(log)),
-	onClearLogs: (callback: () => void) => ipcRenderer.on(Channel.ClearLogs, () => callback()),
-	onDeviceInfoChange: (callback: (device: DeviceInfo | null) => void) =>
-		ipcRenderer.on(Channel.DeviceInfoChange, (_, device) => callback(device)),
-	onElementsChange: (callback: (htmlString: string) => void) =>
-		ipcRenderer.on(Channel.ElementsChange, (_, htmlString) => callback(htmlString)),
-	onStorageChange: (callback: (storage: DeviceStorage) => void) =>
-		ipcRenderer.on(Channel.StorageChange, (_, storage) => callback(storage)),
-	onElementStylesChange: (callback: (data: ElementStylesUpdate) => void) =>
-		ipcRenderer.on(Channel.ElementStylesChange, (_, data) => callback(data))
+	onNewLog(callback: (log: Log) => void) {
+		ipcRenderer.on(Channel.NewLog, (_, log) => callback(log));
+	},
+	onClearLogs(callback: () => void) {
+		ipcRenderer.on(Channel.ClearLogs, callback);
+	},
+	onDeviceInfoChange(callback: (device: GetDeviceInfoResPayload) => void) {
+		ipcRenderer.on(Channel.RefreshDeviceInfo, (_, device) => callback(device));
+	}
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

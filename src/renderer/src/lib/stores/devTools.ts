@@ -12,8 +12,10 @@ function createLogsStore() {
 	const { subscribe, set, update } = writable<Log[]>([]);
 
 	async function load(): Promise<void> {
-		const logs = await window.api.getLogs();
-		set(logs);
+		await window.api
+			.getLogs()
+			.then((res) => set(res))
+			.catch((err) => console.log(err));
 	}
 
 	function clear(): void {
@@ -39,73 +41,58 @@ function createLogsStore() {
 function createLocalStorageStore() {
 	const { subscribe, set } = writable<DeviceStorage | null>(null);
 
-	function load(): void {
-		window.api.refreshStorage('local');
+	async function refresh(): Promise<void> {
+		await window.api
+			.getStorage('local')
+			.then((res) => set(res))
+			.catch((err) => console.log(err));
 	}
-
-	function clear(): void {
-		set(null);
-	}
-
-	window.api.onStorageChange((storage) => {
-		if (storage.type !== 'local') return;
-		set(storage);
-	});
 
 	// TODO: Add methods to update storage
 
 	return {
 		subscribe,
 		set,
-		load,
-		clear
+		refresh
 	};
 }
 function createSessionStorageStore() {
 	const { subscribe, set } = writable<DeviceStorage | null>(null);
 
-	function load(): void {
-		window.api.refreshStorage('session');
+	async function refresh(): Promise<void> {
+		await window.api
+			.getStorage('session')
+			.then((res) => set(res))
+			.catch((err) => console.log(err));
 	}
-
-	function clear(): void {
-		set(null);
-	}
-
-	window.api.onStorageChange((storage) => {
-		if (storage.type !== 'session') return;
-		set(storage);
-	});
 
 	// TODO: Add methods to update storage
 
 	return {
 		subscribe,
 		set,
-		load,
-		clear
+		refresh
 	};
 }
 
 function createElementsStore() {
 	const { subscribe, set } = writable<string>('');
 
-	function load(): void {
-		window.api.refreshElements();
+	async function refresh(): Promise<void> {
+		await window.api
+			.getElements()
+			.then((res) => set(res))
+			.catch((err) => console.log(err));
 	}
 
 	function clear(): void {
 		set('');
 	}
 
-	window.api.onElementsChange((htmlString) => {
-		set(htmlString);
-	});
-
 	return {
 		subscribe,
 		set,
-		load,
+		refresh,
 		clear
 	};
 }

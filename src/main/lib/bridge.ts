@@ -1,75 +1,98 @@
 import { database } from '$main/lib/database.js';
-import { server } from '$main/lib/server.js';
+import { server } from '$main/lib/server';
 import { Channel } from '$shared/enums/channel.js';
-import { DeviceStorage } from '$shared/types/DeviceStorage.js';
 import { formatCode } from '$shared/utils/formatCode.js';
-import type { ElementStylesUpdate, Log } from '@nothing-special/kaiware-lib/types';
-import { DeviceInfo } from '@nothing-special/kaiware-lib/types';
+import { MessageType } from '@nothing-special/kaiware-lib/enums';
+import type {
+	ClearLogsPayload,
+	GetElementDataPayload,
+	GetElementDataResPayload,
+	GetElementStylesResPayload,
+	GetElementsPayload,
+	GetElementsResPayload,
+	GetLogResPayload
+} from '@nothing-special/kaiware-lib/types';
+import {
+	DeviceInfo,
+	GetDeviceInfoPayload,
+	GetDeviceInfoResPayload,
+	GetElementStylesPayload,
+	GetStoragePayload,
+	GetStorageResPayload
+} from '@nothing-special/kaiware-lib/types';
 import { BrowserWindow, ipcMain } from 'electron';
 
 export function registerChannelHandlers() {
-	// Logs
 	ipcMain.handle(Channel.GetLogs, database.logs.getLogs);
 	ipcMain.handle(Channel.ClearLogs, database.logs.clear);
-	// ipcMain.handle('logs-add', (_, log) => database.logs.addLog(log));
 
-	// Requests
-	ipcMain.handle(Channel.RefreshElements, () => server.requestElements());
-	ipcMain.handle(Channel.RefreshDeviceInfo, () => server.requestDeviceInfo());
-	ipcMain.handle(Channel.RefreshStorage, (_, storageType: 'local' | 'session') =>
-		server.requestStorage(storageType)
+	ipcMain.handle(Channel.GetDeviceInfo, () =>
+		server.sendRequest<GetDeviceInfoPayload, GetDeviceInfoResPayload>(
+			{
+				type: MessageType.GetDeviceInfo,
+				data: null
+			},
+			MessageType.GetDeviceInfoRes
+		)
 	);
 
+	ipcMain.handle(Channel.GetElements, async () => {
+		const response = await server.sendRequest<GetElementsPayload, GetElementsResPayload>(
+			{
+				type: MessageType.GetElements,
+				data: null
+			},
+			MessageType.GetElementsRes
+		);
+
+		return formatCode(response, 'html');
+	});
+
 	ipcMain.handle(Channel.GetElementStyles, (_, index: number) =>
-		server.requestElementStyles(index)
+		server.sendRequest<GetElementStylesPayload, GetElementStylesResPayload>(
+			{
+				type: MessageType.GetElementStyles,
+				data: { index }
+			},
+			MessageType.GetElementStylesRes
+		)
+	);
+
+	ipcMain.handle(Channel.GetElementData, (_, index: number) =>
+		server.sendRequest<GetElementDataPayload, GetElementDataResPayload>(
+			{
+				type: MessageType.GetElementData,
+				data: { index }
+			},
+			MessageType.GetElementDataRes
+		)
+	);
+
+	ipcMain.handle(Channel.GetStorage, (_, storageType: 'local' | 'session') =>
+		server.sendRequest<GetStoragePayload, GetStorageResPayload>(
+			{
+				type: MessageType.GetStorage,
+				data: { storageType }
+			},
+			MessageType.GetStorageRes
+		)
 	);
 }
 
-// Handle websocket messages
-server.onReceiveDeviceInfo((device) => {
-	Browser.updateDeviceInfo(device);
+// Listen for new logs
+server.onReceiveMessage<GetLogResPayload>(MessageType.NewLog, async (message) => {
+	const createdLog = await database.logs.addLog(message.data);
+	BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.NewLog, createdLog);
 });
 
-server.onReceiveElements(async (htmlStr) => {
-	const formatted = await formatCode(htmlStr, 'html');
-	Browser.updateElements(formatted);
-});
-
-server.onReceiveStorage((storage) => {
-	Browser.updateStorage(storage);
-});
-
-server.onReceiveLog(async (log) => {
-	const createdLog = await database.logs.addLog(log);
-	Browser.addLog(createdLog);
-});
-
-server.onReceiveClearLogs(() => {
-	database.logs.clear();
-	Browser.clearLogs();
-});
-
-server.onReceiveElementStyles((data: ElementStylesUpdate) => {
-	Browser.updateElementStyles(data);
+// Listen for clear logs
+server.onReceiveMessage<ClearLogsPayload>(MessageType.ClearLogs, async () => {
+	await database.logs.clear();
+	BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.ClearLogs);
 });
 
 export const Browser = {
 	updateDeviceInfo(device: DeviceInfo | null) {
-		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.DeviceInfoChange, device);
-	},
-	updateElements(htmlStr: string) {
-		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.ElementsChange, htmlStr);
-	},
-	updateElementStyles(data: ElementStylesUpdate) {
-		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.ElementStylesChange, data);
-	},
-	updateStorage(storage: DeviceStorage) {
-		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.StorageChange, storage);
-	},
-	addLog(log: Log) {
-		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.NewLog, log);
-	},
-	clearLogs() {
-		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.ClearLogs);
+		BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.RefreshDeviceInfo, device);
 	}
 };

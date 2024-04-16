@@ -19,8 +19,8 @@
 
 	onMount(() => {
 		console.log('Storage page mounted');
-		localStorage.load();
-		sessionStorage.load();
+		localStorage.refresh();
+		sessionStorage.refresh();
 	});
 </script>
 
