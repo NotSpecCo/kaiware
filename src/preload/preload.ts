@@ -26,8 +26,14 @@ export const api = {
 	async getElementStyles(index: number): Promise<GetElementStylesResPayload> {
 		return ipcRenderer.invoke(Channel.GetElementStyles, index);
 	},
+	async setElementStyles(index: number, styles: { [key: string]: string }): Promise<void> {
+		return ipcRenderer.invoke(Channel.SetElementStyles, index, styles);
+	},
 	async getElementData(index: number): Promise<GetElementDataResPayload> {
-		return ipcRenderer.invoke(Channel.GetElementStyles, index);
+		return ipcRenderer.invoke(Channel.GetElementData, index);
+	},
+	async setElementData(index: number, data: { [key: string]: unknown }): Promise<void> {
+		return ipcRenderer.invoke(Channel.SetElementData, index, data);
 	},
 	async getStorage(storageType: 'local' | 'session'): Promise<DeviceStorage> {
 		return ipcRenderer.invoke(Channel.GetStorage, storageType);

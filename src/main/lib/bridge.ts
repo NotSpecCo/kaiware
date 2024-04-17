@@ -40,10 +40,26 @@ export function registerChannelHandlers() {
 		})
 	);
 
+	ipcMain.handle(
+		Channel.SetElementStyles,
+		(_, index: number, styles: { [key: string]: string }) =>
+			server.sendRequest({
+				type: MessageType.SetElementStyles,
+				data: { index, styles }
+			})
+	);
+
 	ipcMain.handle(Channel.GetElementData, (_, index: number) =>
 		server.sendRequest<GetElementDataResPayload>({
 			type: MessageType.GetElementData,
 			data: { index }
+		})
+	);
+
+	ipcMain.handle(Channel.SetElementData, (_, index: number, data: { [key: string]: unknown }) =>
+		server.sendRequest({
+			type: MessageType.SetElementData,
+			data: { index, data }
 		})
 	);
 

@@ -7,9 +7,11 @@ export enum Channel {
 	RefreshElements = 'refresh-elements',
 
 	GetElementStyles = 'get-element-styles',
+	SetElementStyles = 'set-element-styles',
 	RefreshElementStyles = 'refresh-element-styles',
 
 	GetElementData = 'get-element-data',
+	SetElementData = 'set-element-data',
 	RefreshElementData = 'refresh-element-data',
 
 	GetDeviceInfo = 'get-device-info',

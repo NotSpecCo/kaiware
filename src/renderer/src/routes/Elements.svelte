@@ -3,43 +3,64 @@
 	import Code from '$lib/ui-components/Code.svelte';
 	import InlineInput from '$lib/ui-components/form/InlineInput.svelte';
 	import Input from '$lib/ui-components/form/Input.svelte';
+	import { delay } from '$shared/utils/delay';
 	import hljs from 'highlight.js';
 	import { onMount } from 'svelte';
 
 	let htmlContent: string = '';
 	let htmlContainer: HTMLElement;
+	let activeElementIndex: number | null = null;
 	let elementStyles: Record<string, string> | null = null;
 	let styleQuery: string = '';
 
-	$: {
+	$: $elements && parseHtml();
+
+	async function handleElementClick(index: number) {
+		try {
+			elementStyles = await window.api
+				.getElementStyles(index)
+				.then((styles) => styles.styles);
+
+			// Remove active state from previous element
+			if (activeElementIndex !== null) {
+				const previous = getEditableElementAtIndex(activeElementIndex);
+				previous?.classList.remove('active-element');
+			}
+
+			const nextElement = getEditableElementAtIndex(index);
+			nextElement?.classList.add('active-element');
+
+			activeElementIndex = index;
+		} catch (err) {
+			console.error('error getting styles', err);
+		}
+	}
+
+	function getEditableElements(): HTMLElement[] {
+		return Array.from(htmlContainer.querySelectorAll('.hljs-tag'))
+			.filter((element) => !element.textContent?.startsWith('</'))
+			.map((ele) => ele.querySelector('.hljs-name') as HTMLElement);
+	}
+
+	function getEditableElementAtIndex(index: number): HTMLElement | null {
+		return getEditableElements()[index] || null;
+	}
+
+	async function parseHtml() {
 		htmlContent = hljs.highlight($elements, {
 			language: 'html'
 		}).value;
 
 		// Make sure the html is rendered before trying to attach event listeners
-		setTimeout(attachListeners, 100);
-	}
-
-	async function handleElementClick(index: number) {
-		window.api
-			.getElementStyles(index)
-			.then((styles) => {
-				elementStyles = styles.styles;
-			})
-			.catch((err) => {
-				console.error('error getting styles', err);
-			});
-	}
-
-	function attachListeners() {
+		await delay(100);
 		if (!htmlContainer) return;
 
 		Array.from(htmlContainer.querySelectorAll('.hljs-tag'))
 			.filter((element) => !element.textContent?.startsWith('</'))
 			.forEach((ele, i) => {
-				ele.querySelector('.hljs-name')?.addEventListener('click', () =>
-					handleElementClick(i)
-				);
+				const tag = ele.querySelector('.hljs-name');
+				i === activeElementIndex && tag?.classList.add('active-element');
+				tag?.addEventListener('click', () => handleElementClick(i));
 			});
 	}
 
@@ -51,11 +72,14 @@
 		styleQuery = (ev.target as HTMLInputElement).value;
 	}
 
-	function updateStyle(ev: KeyboardEvent, index: number, property: string) {
-		if (ev.key !== 'Enter') return;
+	async function updateStyle(ev: KeyboardEvent, property: string) {
+		if (ev.key !== 'Enter' || activeElementIndex === null) return;
 
-		const value = (ev.target as HTMLInputElement).value;
-		console.log('updateStyle', index, property, value);
+		await window.api.setElementStyles(activeElementIndex, {
+			[property]: (ev.target as HTMLInputElement).value
+		});
+
+		elements.refresh();
 	}
 </script>
 
@@ -72,13 +96,12 @@
 			</div>
 			<!-- TODO: In addition to styles, get element info eg console.dir(element) -->
 			<div class="styles">
-				{#each Object.entries(elementStyles).filter( (a) => (styleQuery ? a[0].includes(styleQuery) : true) ) as style, i (style[0])}
+				{#each Object.entries(elementStyles).filter( (a) => (styleQuery ? a[0].includes(styleQuery) : true) ) as style (style[0])}
 					<div class="style-row">
 						<div class="name">{`${style[0]}:`}</div>
-						<!-- <div class="value">{style[1]}</div> -->
 						<InlineInput
 							value={style[1]}
-							on:keydown={(ev) => updateStyle(ev, i, style[0])}
+							on:keydown={(ev) => updateStyle(ev, style[0])}
 						/>
 					</div>
 				{/each}
@@ -143,8 +166,12 @@
 		margin-right: 10px;
 		margin-bottom: 2px;
 	}
-	/* .value {
-		color: var(--accent-primary);
-		white-space: wrap;
-	} */
+
+	:global(.hljs-name:hover) {
+		cursor: pointer;
+		border-bottom: 2px solid var(--accent-primary);
+	}
+	:global(.active-element) {
+		border-bottom: 2px solid var(--accent-primary);
+	}
 </style>
