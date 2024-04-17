@@ -1,27 +1,14 @@
 import { Browser } from '$main/lib/bridge';
 import { MessageType } from '@nothing-special/kaiware-lib/enums';
 import {
-	GetDeviceInfoPayload,
 	GetDeviceInfoResPayload,
 	Message,
-	buildRawMessageSchema,
-	getDeviceInfoPayloadSchema,
-	getDeviceInfoResPayloadSchema,
-	getElementDataPayloadSchema,
-	getElementDataResPayloadSchema,
-	getElementStylesPayloadSchema,
-	getElementStylesResPayloadSchema,
-	getElementsPayloadSchema,
-	getElementsResPayloadSchema,
-	getStoragePayloadSchema,
-	getStorageResPayloadSchema,
-	setStoragePayloadSchema,
-	setStorageResPayloadSchema
+	MessageWithId,
+	rawMessageSchema
 } from '@nothing-special/kaiware-lib/types';
 import { isJson } from '@nothing-special/kaiware-lib/utils';
 import { createServer } from 'http';
 import { RawData, WebSocket, WebSocketServer } from 'ws';
-import { z } from 'zod';
 
 export const server = {
 	startServer: () => httpServer.listen(3000),
@@ -30,13 +17,16 @@ export const server = {
 		Browser.updateDeviceInfo(null);
 	},
 	sendRequest,
-	onReceiveMessage<T>(messageType: MessageType, callback: (message: Message<T>) => void) {
+	onReceiveMessage(
+		messageType: MessageType,
+		callback: (message: MessageWithId) => Promise<void>
+	) {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		listeners.set(messageType, callback as any);
 	}
 };
 
-const listeners = new Map<MessageType, (message: Message<unknown>) => Promise<void>>();
+const listeners = new Map<MessageType, (message: Message) => Promise<void>>();
 
 const socketServer = {
 	server: new WebSocketServer({ noServer: true }),
@@ -78,13 +68,10 @@ socketServer.server.on('connection', async (ws: WebSocket) => {
 
 	// Get real device info
 	server
-		.sendRequest<GetDeviceInfoPayload, GetDeviceInfoResPayload>(
-			{
-				type: MessageType.GetDeviceInfo,
-				data: null
-			},
-			MessageType.GetDeviceInfoRes
-		)
+		.sendRequest<GetDeviceInfoResPayload>({
+			type: MessageType.GetDeviceInfo,
+			data: null
+		})
 		.then((info) => {
 			Browser.updateDeviceInfo({
 				...info,
@@ -115,7 +102,7 @@ socketServer.server.on('connection', async (ws: WebSocket) => {
 		const listener = listeners.get(messageType);
 		if (listener) {
 			try {
-				const message = validateMessage<unknown>(messageType, rawMessage);
+				const message = validateMessage(rawMessage);
 				await listener(message);
 			} catch (err) {
 				console.log('Listener encountered an error:', err);
@@ -124,70 +111,26 @@ socketServer.server.on('connection', async (ws: WebSocket) => {
 	});
 });
 
-function validateMessage<TData>(messageType: MessageType, rawMessage: RawData): Message<TData> {
-	let dataSchema: z.ZodType<unknown> = z.unknown();
-
-	switch (messageType) {
-		case MessageType.GetDeviceInfo:
-			dataSchema = getDeviceInfoPayloadSchema;
-			break;
-		case MessageType.GetDeviceInfoRes:
-			dataSchema = getDeviceInfoResPayloadSchema;
-			break;
-		case MessageType.GetElements:
-			dataSchema = getElementsPayloadSchema;
-			break;
-		case MessageType.GetElementsRes:
-			dataSchema = getElementsResPayloadSchema;
-			break;
-		case MessageType.GetElementStyles:
-			dataSchema = getElementStylesPayloadSchema;
-			break;
-		case MessageType.GetElementStylesRes:
-			dataSchema = getElementStylesResPayloadSchema;
-			break;
-		case MessageType.GetElementData:
-			dataSchema = getElementDataPayloadSchema;
-			break;
-		case MessageType.GetElementDataRes:
-			dataSchema = getElementDataResPayloadSchema;
-			break;
-		case MessageType.GetStorage:
-			dataSchema = getStoragePayloadSchema;
-			break;
-		case MessageType.GetStorageRes:
-			dataSchema = getStorageResPayloadSchema;
-			break;
-		case MessageType.SetStorage:
-			dataSchema = setStoragePayloadSchema;
-			break;
-		case MessageType.SetStorageRes:
-			dataSchema = setStorageResPayloadSchema;
-			break;
-		default:
-			console.log('Unknown message type:', messageType);
-			break;
-	}
-
-	const messageSchema = buildRawMessageSchema(dataSchema);
-
-	const message = messageSchema.safeParse(rawMessage.toString());
+function validateMessage(rawMessage: RawData): MessageWithId {
+	const message = rawMessageSchema.safeParse(rawMessage.toString());
 	if (!message.success) {
 		console.error('Invalid message:', {
 			name: 'ValidationError',
 			input: rawMessage.toString(),
-			errors: message.error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`)
+			errors: message.error.issues.map(
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				(issue: any) => `${issue.path.join('.')}: ${issue.message}`
+			)
 		});
 		throw new Error('Invalid message');
 	}
 
-	return message.data as Message<TData>;
+	return message.data as MessageWithId;
 }
 
-async function sendRequest<TRequest, TResponse>(
-	message: Omit<Message<TRequest>, 'requestId'>,
-	responseMessageType: MessageType
-): Promise<TResponse> {
+// TODO: Infer TRequest and TResponse from the message type
+// TODO: Better solution than caller passsing in the response message type
+async function sendRequest<TResponse = null>(message: Message): Promise<TResponse> {
 	const socket = socketServer.getActiveSocket();
 	if (!socket) {
 		throw new Error('No device connected');
@@ -199,10 +142,10 @@ async function sendRequest<TRequest, TResponse>(
 		socket.send(JSON.stringify({ requestId, type: message.type, data: message.data }));
 
 		const listener = (rawMessage: RawData) => {
-			const response = validateMessage<TResponse>(responseMessageType, rawMessage);
+			const response = validateMessage(rawMessage);
 
 			if (response.requestId === requestId) {
-				resolve(response.data);
+				resolve(response.data as TResponse);
 				socket.off('message', listener);
 			}
 		};
