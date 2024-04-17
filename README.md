@@ -2,6 +2,8 @@
 
 A desktop application to manage your KaiOS phone. Not at all finished or bug free. Still just playing around.
 
+![Screenshot](/screenshots/screenshot-elements.png?raw=true)
+
 ### Demo
 
 1. Launch Kaiware. It also starts a http server on port 3000 for your phone to connect to.
