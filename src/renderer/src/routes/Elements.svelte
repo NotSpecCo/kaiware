@@ -52,7 +52,7 @@
 		}).value;
 
 		// Make sure the html is rendered before trying to attach event listeners
-		await delay(100);
+		await delay(10);
 		if (!htmlContainer) return;
 
 		Array.from(htmlContainer.querySelectorAll('.hljs-tag'))

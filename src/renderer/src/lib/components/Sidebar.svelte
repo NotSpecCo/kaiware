@@ -1,4 +1,5 @@
 <script>
+	import { device } from '$lib/stores/device';
 	import { link, location } from 'svelte-spa-router';
 </script>
 
@@ -12,14 +13,29 @@
 		<a href="/dashboard" use:link class:active={$location === '/dashboard'}>Dashboard</a>
 
 		<div class="divider named">Dev Tools</div>
-		<a href="/dev-tools/elements" use:link class:active={$location === '/dev-tools/elements'}>
+		<a href="/dev-tools/logs" use:link class:active={$location === '/dev-tools/logs'}>Logs</a>
+		<a
+			href="/dev-tools/elements"
+			use:link
+			class:active={$location === '/dev-tools/elements'}
+			class:disabled={$device === null}
+		>
 			Elements
 		</a>
-		<a href="/dev-tools/logs" use:link class:active={$location === '/dev-tools/logs'}>Logs</a>
-		<a href="/dev-tools/network" use:link class:active={$location === '/dev-tools/network'}>
+		<a
+			href="/dev-tools/network"
+			use:link
+			class:active={$location === '/dev-tools/network'}
+			class:disabled={$device === null}
+		>
 			Network
 		</a>
-		<a href="/dev-tools/storage" use:link class:active={$location === '/dev-tools/storage'}>
+		<a
+			href="/dev-tools/storage"
+			use:link
+			class:active={$location === '/dev-tools/storage'}
+			class:disabled={$device === null}
+		>
 			Storage
 		</a>
 
@@ -81,8 +97,16 @@
 		padding: 5px 10px;
 		font-size: 1.6rem;
 		border-left: 5px solid transparent;
+		text-decoration: none;
 	}
 	.nav > a.active {
 		border-color: var(--accent-primary);
+	}
+	.nav > a:hover {
+		border-color: var(--accent-primary);
+	}
+	.nav > a.disabled {
+		opacity: 0.4;
+		pointer-events: none;
 	}
 </style>
