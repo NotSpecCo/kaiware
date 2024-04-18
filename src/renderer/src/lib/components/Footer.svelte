@@ -4,6 +4,7 @@
 	import { IconSize } from '$shared/enums/iconSize';
 	import IconUsb from '~icons/ion/usb';
 	import IconWifi from '~icons/ion/wifi';
+	import pkg from '../../../../../package.json';
 </script>
 
 <div class="root">
@@ -18,7 +19,7 @@
 		<div class="name">{$device?.name ?? 'No device connected'}</div>
 	</div>
 	<div class="flex"></div>
-	<div class="version">Kaiware v0.1.0</div>
+	<div class="version">{`Kaiware v${pkg.version}`}</div>
 </div>
 
 <style>
