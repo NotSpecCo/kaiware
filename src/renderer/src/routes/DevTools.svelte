@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { device } from '$lib/stores/device';
 	import View from '$lib/ui-components/view/View.svelte';
 	import ViewContent from '$lib/ui-components/view/ViewContent.svelte';
 	import ViewHeader from '$lib/ui-components/view/ViewHeader.svelte';
@@ -24,14 +25,6 @@
 <View>
 	<ViewHeader title="Dev Tools">
 		<a
-			href="/dev-tools/elements"
-			use:link
-			class="nav-link"
-			class:active={$location === '/dev-tools/elements'}
-		>
-			Elements
-		</a>
-		<a
 			href="/dev-tools/logs"
 			use:link
 			class="nav-link"
@@ -40,10 +33,20 @@
 			Logs
 		</a>
 		<a
+			href="/dev-tools/elements"
+			use:link
+			class="nav-link"
+			class:active={$location === '/dev-tools/elements'}
+			class:disabled={$device === null}
+		>
+			Elements
+		</a>
+		<a
 			href="/dev-tools/network"
 			use:link
 			class="nav-link"
 			class:active={$location === '/dev-tools/network'}
+			class:disabled={$device === null}
 		>
 			Network
 		</a>
@@ -52,6 +55,7 @@
 			use:link
 			class="nav-link"
 			class:active={$location === '/dev-tools/storage'}
+			class:disabled={$device === null}
 		>
 			Storage
 		</a>
@@ -67,8 +71,14 @@
 		margin-right: 15px;
 		margin-bottom: -2px;
 		border-bottom: 3px solid transparent;
+		text-decoration: none;
 	}
-	.nav-link.active {
+	.nav-link.active,
+	.nav-link:hover {
 		border-color: var(--accent-primary);
+	}
+	.nav-link.disabled {
+		opacity: 0.4;
+		pointer-events: none;
 	}
 </style>

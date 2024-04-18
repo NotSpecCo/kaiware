@@ -2,7 +2,9 @@
 	import Footer from '$lib/components/Footer.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
-	import Router from 'svelte-spa-router';
+	import { device } from '$lib/stores/device';
+	import { onMount } from 'svelte';
+	import Router, { location, push } from 'svelte-spa-router';
 	import About from './routes/About.svelte';
 	import AppStore from './routes/AppStore.svelte';
 	import Dashboard from './routes/Dashboard.svelte';
@@ -21,6 +23,27 @@
 		'/about': About,
 		'*': Redirect
 	};
+
+	onMount(() => {
+		let firstValue = true;
+		const unsubscribe = device.subscribe((val) => {
+			if (firstValue) {
+				firstValue = false;
+				return;
+			}
+
+			const deviceRequiredPages = [
+				'/dev-tools/elements',
+				'/dev-tools/network',
+				'/dev-tools/storage'
+			];
+			if (val === null && deviceRequiredPages.includes($location)) {
+				push('/dashboard');
+			}
+		});
+
+		return () => unsubscribe();
+	});
 </script>
 
 <div class="root">

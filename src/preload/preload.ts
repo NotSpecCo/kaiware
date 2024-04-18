@@ -46,7 +46,7 @@ export const api = {
 	onClearLogs(callback: () => void) {
 		ipcRenderer.on(Channel.ClearLogs, callback);
 	},
-	onDeviceInfoChange(callback: (device: GetDeviceInfoResPayload) => void) {
+	onDeviceInfoChange(callback: (device: GetDeviceInfoResPayload | null) => void) {
 		ipcRenderer.on(Channel.RefreshDeviceInfo, (_, device) => callback(device));
 	}
 };

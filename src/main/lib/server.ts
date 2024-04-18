@@ -89,6 +89,7 @@ socketServer.server.on('connection', async (ws: WebSocket) => {
 	socket.on('close', () => {
 		console.log('Device disconnected');
 		server.stopServer();
+		Browser.updateDeviceInfo(null);
 	});
 
 	// Handle incoming messages that we didn't request

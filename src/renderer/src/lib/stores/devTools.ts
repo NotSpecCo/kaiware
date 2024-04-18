@@ -1,3 +1,4 @@
+import { device } from '$lib/stores/device';
 import type { DeviceStorage } from '$shared/types/DeviceStorage';
 import type { Log } from '@nothing-special/kaiware-lib/types';
 
@@ -41,6 +42,10 @@ function createLogsStore() {
 function createLocalStorageStore() {
 	const { subscribe, set } = writable<DeviceStorage | null>(null);
 
+	device.subscribe((device) => {
+		if (device === null) set(null);
+	});
+
 	async function refresh(): Promise<void> {
 		await window.api
 			.getStorage('local')
@@ -58,6 +63,10 @@ function createLocalStorageStore() {
 }
 function createSessionStorageStore() {
 	const { subscribe, set } = writable<DeviceStorage | null>(null);
+
+	device.subscribe((device) => {
+		if (device === null) set(null);
+	});
 
 	async function refresh(): Promise<void> {
 		await window.api
@@ -77,6 +86,10 @@ function createSessionStorageStore() {
 
 function createElementsStore() {
 	const { subscribe, set } = writable<string>('');
+
+	device.subscribe((device) => {
+		if (device === null) set('');
+	});
 
 	async function refresh(): Promise<void> {
 		await window.api
