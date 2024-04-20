@@ -5,7 +5,8 @@ import type {
 	GetDeviceInfoResPayload,
 	GetElementDataResPayload,
 	GetElementStylesResPayload,
-	Log
+	Log,
+	NetworkRequest
 } from '@nothing-special/kaiware-lib/types';
 import { contextBridge, ipcRenderer } from 'electron';
 
@@ -38,6 +39,12 @@ export const api = {
 	async getStorage(storageType: 'local' | 'session'): Promise<DeviceStorage> {
 		return ipcRenderer.invoke(Channel.GetStorage, storageType);
 	},
+	async getNetworkRequests(): Promise<NetworkRequest[]> {
+		return ipcRenderer.invoke(Channel.GetNetworkRequests);
+	},
+	async clearNetworkRequests(): Promise<void> {
+		return ipcRenderer.invoke(Channel.ClearNetworkRequests);
+	},
 
 	// Events
 	onNewLog(callback: (log: Log) => void) {
@@ -48,6 +55,9 @@ export const api = {
 	},
 	onDeviceInfoChange(callback: (device: GetDeviceInfoResPayload | null) => void) {
 		ipcRenderer.on(Channel.RefreshDeviceInfo, (_, device) => callback(device));
+	},
+	onNetworkRequestUpdate(callback: (request: NetworkRequest) => void) {
+		ipcRenderer.on(Channel.NetworkRequestUpdate, (_, request) => callback(request));
 	}
 };
 

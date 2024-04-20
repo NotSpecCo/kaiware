@@ -18,5 +18,9 @@ export enum Channel {
 	RefreshDeviceInfo = 'refresh-device-info',
 
 	GetStorage = 'get-storage',
-	RefreshStorage = 'refresh-storage'
+	RefreshStorage = 'refresh-storage',
+
+	GetNetworkRequests = 'get-network-requests',
+	NetworkRequestUpdate = 'network-request-update',
+	ClearNetworkRequests = 'clear-network-requests'
 }

@@ -22,12 +22,7 @@
 		>
 			Elements
 		</a>
-		<a
-			href="/dev-tools/network"
-			use:link
-			class:active={$location === '/dev-tools/network'}
-			class:disabled={$device === null}
-		>
+		<a href="/dev-tools/network" use:link class:active={$location === '/dev-tools/network'}>
 			Network
 		</a>
 		<a

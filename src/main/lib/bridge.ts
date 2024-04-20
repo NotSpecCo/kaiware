@@ -9,7 +9,8 @@ import {
 	GetElementStylesResPayload,
 	GetElementsResPayload,
 	GetLogResPayload,
-	GetStorageResPayload
+	GetStorageResPayload,
+	NetworkRequest
 } from '@nothing-special/kaiware-lib/types';
 import { BrowserWindow, ipcMain } from 'electron';
 
@@ -69,6 +70,9 @@ export function registerChannelHandlers() {
 			data: { storageType }
 		})
 	);
+
+	ipcMain.handle(Channel.GetNetworkRequests, database.networkRequests.getRequests);
+	ipcMain.handle(Channel.ClearNetworkRequests, database.networkRequests.clear);
 }
 
 // Listen for new logs
@@ -81,6 +85,17 @@ server.onReceiveMessage(MessageType.NewLog, async (message) => {
 server.onReceiveMessage(MessageType.ClearLogs, async () => {
 	await database.logs.clear();
 	BrowserWindow.getAllWindows()[0]?.webContents.send(Channel.ClearLogs);
+});
+
+// Listen for network requests
+server.onReceiveMessage(MessageType.NetworkRequestUpdate, async (message) => {
+	const createdRequest = await database.networkRequests.updateRequest(
+		message.data as NetworkRequest
+	);
+	BrowserWindow.getAllWindows()[0]?.webContents.send(
+		Channel.NetworkRequestUpdate,
+		createdRequest
+	);
 });
 
 export const Browser = {

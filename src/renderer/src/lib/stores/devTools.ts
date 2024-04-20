@@ -1,6 +1,6 @@
 import { device } from '$lib/stores/device';
 import type { DeviceStorage } from '$shared/types/DeviceStorage';
-import type { Log } from '@nothing-special/kaiware-lib/types';
+import type { Log, NetworkRequest } from '@nothing-special/kaiware-lib/types';
 
 import { writable } from 'svelte/store';
 
@@ -8,6 +8,7 @@ export const logs = createLogsStore();
 export const elements = createElementsStore();
 export const localStorage = createLocalStorageStore();
 export const sessionStorage = createSessionStorageStore();
+export const networkRequests = createNetworkRequestsStore();
 
 function createLogsStore() {
 	const { subscribe, set, update } = writable<Log[]>([]);
@@ -106,6 +107,38 @@ function createElementsStore() {
 		subscribe,
 		set,
 		refresh,
+		clear
+	};
+}
+
+function createNetworkRequestsStore() {
+	const { subscribe, set, update } = writable<NetworkRequest[]>([]);
+
+	async function load(): Promise<void> {
+		await window.api
+			.getNetworkRequests()
+			.then((res) => set(res))
+			.catch((err) => console.log(err));
+	}
+
+	async function clear(): Promise<void> {
+		await window.api.clearNetworkRequests();
+		set([]);
+	}
+
+	window.api.onNetworkRequestUpdate((request) => {
+		update((previous) => {
+			const index = previous.findIndex((a) => a.requestId === request.requestId);
+			if (index === -1) return [request, ...previous];
+			previous[index] = request;
+			return [...previous];
+		});
+	});
+
+	return {
+		subscribe,
+		set,
+		load,
 		clear
 	};
 }

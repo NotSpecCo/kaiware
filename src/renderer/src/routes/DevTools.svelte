@@ -46,7 +46,6 @@
 			use:link
 			class="nav-link"
 			class:active={$location === '/dev-tools/network'}
-			class:disabled={$device === null}
 		>
 			Network
 		</a>

@@ -1,0 +1,83 @@
+<script lang="ts">
+	import { formatBytes } from '$shared/utils/formatBytes';
+	import type { NetworkRequest } from '@nothing-special/kaiware-lib/types';
+	import dayjs from 'dayjs';
+
+	export let networkRequest: NetworkRequest;
+
+	const displayDate = dayjs(networkRequest.startTime).format('LTS');
+
+	let duration: number | null = null;
+	$: duration = networkRequest.endTime ? networkRequest.endTime - networkRequest.startTime : null;
+</script>
+
+<div class="network-request-row">
+	<div class="date">{displayDate}</div>
+	<div class="method">{networkRequest.method}</div>
+	<div class="url">{networkRequest.url}</div>
+	<div class="size">{formatBytes(networkRequest.responseSize)}</div>
+	<div class="duration">{`${duration} ms`}</div>
+	<div
+		class="status"
+		class:success={networkRequest.lifecycleStatus === 'success'}
+		class:error={networkRequest.lifecycleStatus === 'error' ||
+			networkRequest.lifecycleStatus === 'aborted' ||
+			networkRequest.lifecycleStatus === 'timeout'}
+	>
+		{networkRequest.lifecycleStatus}
+	</div>
+	<div
+		class="status-code"
+		class:success={networkRequest.responseStatus &&
+			networkRequest.responseStatus >= 200 &&
+			networkRequest.responseStatus < 300}
+		class:warning={networkRequest.responseStatus &&
+			networkRequest.responseStatus >= 300 &&
+			networkRequest.responseStatus < 400}
+		class:error={networkRequest.responseStatus && networkRequest.responseStatus >= 400}
+	>
+		{networkRequest.responseStatus}
+	</div>
+</div>
+
+<style>
+	.network-request-row {
+		display: flex;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		padding: 7px 0;
+		cursor: pointer;
+	}
+	.network-request-row:hover {
+		background-color: rgba(0, 0, 0, 0.05);
+	}
+
+	div.success {
+		color: var(--text-success);
+	}
+	div.warning {
+		color: var(--text-warning);
+	}
+	div.error {
+		color: var(--text-error);
+	}
+
+	.network-request-row > div {
+		margin-right: 10px;
+	}
+	.network-request-row > div:last-of-type {
+		margin-right: 0px;
+	}
+
+	.method {
+		color: var(--accent-primary);
+	}
+
+	.url {
+		flex: 1;
+	}
+
+	.size,
+	.duration {
+		color: var(--text-secondary);
+	}
+</style>
