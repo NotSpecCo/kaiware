@@ -2,6 +2,7 @@
 	import { device } from '$lib/stores/device';
 	import Icon from '$lib/ui-components/icons/Icon.svelte';
 	import { IconSize } from '$shared/enums/iconSize';
+	import { link } from 'svelte-spa-router';
 	import IconUsb from '~icons/ion/usb';
 	import IconWifi from '~icons/ion/wifi';
 	import pkg from '../../../../../package.json';
@@ -19,7 +20,7 @@
 		<div class="name">{$device?.name ?? 'No device connected'}</div>
 	</div>
 	<div class="flex"></div>
-	<div class="version">{`Kaiware v${pkg.version}`}</div>
+	<a href="/about" use:link class="version">{`Kaiware v${pkg.version}`}</a>
 </div>
 
 <style>
@@ -41,5 +42,13 @@
 
 	.flex {
 		flex: 1;
+	}
+
+	.version {
+		border-bottom: 1px solid transparent;
+		text-decoration: none;
+	}
+	.version:hover {
+		border-color: var(--accent-primary);
 	}
 </style>

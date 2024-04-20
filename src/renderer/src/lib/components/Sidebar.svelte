@@ -45,7 +45,6 @@
 
 		<div class="divider named">Misc</div>
 		<a href="/settings" use:link class:active={$location === '/settings'}>Settings</a>
-		<a href="/about" use:link class:active={$location === '/about'}>About</a>
 	</div>
 </div>
 
