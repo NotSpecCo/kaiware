@@ -4,6 +4,7 @@ import { Channel } from '$shared/enums/channel.js';
 import { formatCode } from '$shared/utils/formatCode.js';
 import { MessageType } from '@nothing-special/kaiware-lib/enums';
 import {
+	ConsoleCommandResPayload,
 	DeviceInfo,
 	GetElementDataResPayload,
 	GetElementStylesResPayload,
@@ -73,6 +74,16 @@ export function registerChannelHandlers() {
 
 	ipcMain.handle(Channel.GetNetworkRequests, database.networkRequests.getRequests);
 	ipcMain.handle(Channel.ClearNetworkRequests, database.networkRequests.clear);
+	ipcMain.handle(Channel.GetNetworkRequestById, (_, id: number) =>
+		database.networkRequests.getRequestById(id)
+	);
+
+	ipcMain.handle(Channel.ExecuteConsoleCommand, (_, command: string) =>
+		server.sendRequest<ConsoleCommandResPayload>({
+			type: MessageType.ExecuteConsoleCommand,
+			data: { command }
+		})
+	);
 }
 
 // Listen for new logs

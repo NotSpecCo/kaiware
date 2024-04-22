@@ -1,7 +1,7 @@
 {
 	"name": "kaiware",
 	"version": "0.1.0",
-	"description": "A desktop application to manage your KaiOS device.",
+	"description": "A desktop application that lets you remotely debug apps on your KaiOS device.",
 	"main": "./out/main/index.js",
 	"author": {
 		"name": "Garrett Downs",
@@ -35,7 +35,7 @@
 		"@cliqz-oss/firefox-client": "^0.3.1",
 		"@electron-toolkit/preload": "^3.0.0",
 		"@electron-toolkit/utils": "^3.0.0",
-		"@nothing-special/kaiware-lib": "^0.7.0",
+		"@nothing-special/kaiware-lib": "^0.8.0",
 		"dayjs": "^1.11.10",
 		"express": "^4.19.2",
 		"express-ws": "^5.0.2",

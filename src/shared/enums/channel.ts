@@ -22,5 +22,8 @@ export enum Channel {
 
 	GetNetworkRequests = 'get-network-requests',
 	NetworkRequestUpdate = 'network-request-update',
-	ClearNetworkRequests = 'clear-network-requests'
+	ClearNetworkRequests = 'clear-network-requests',
+	GetNetworkRequestById = 'get-network-request-by-id',
+
+	ExecuteConsoleCommand = 'execute-console-command'
 }

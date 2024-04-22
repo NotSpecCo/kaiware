@@ -11,7 +11,9 @@
 	{placeholder}
 	{value}
 	style={width ? `width: ${width}` : ''}
+	spellcheck="false"
 	on:input
+	on:keydown
 />
 
 <style>

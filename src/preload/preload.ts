@@ -2,6 +2,7 @@ import { Channel } from '$shared/enums/channel.js';
 import type { DeviceStorage } from '$shared/types/DeviceStorage.js';
 import { electronAPI } from '@electron-toolkit/preload';
 import type {
+	ConsoleCommandResPayload,
 	GetDeviceInfoResPayload,
 	GetElementDataResPayload,
 	GetElementStylesResPayload,
@@ -44,6 +45,12 @@ export const api = {
 	},
 	async clearNetworkRequests(): Promise<void> {
 		return ipcRenderer.invoke(Channel.ClearNetworkRequests);
+	},
+	async getNetworkRequestById(id: number): Promise<NetworkRequest> {
+		return ipcRenderer.invoke(Channel.GetNetworkRequestById, id);
+	},
+	async executeConsoleCommand(command: string): Promise<ConsoleCommandResPayload> {
+		return ipcRenderer.invoke(Channel.ExecuteConsoleCommand, command);
 	},
 
 	// Events

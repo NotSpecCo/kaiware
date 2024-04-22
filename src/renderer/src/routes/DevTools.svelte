@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Console from '$/routes/Console.svelte';
 	import { device } from '$lib/stores/device';
 	import View from '$lib/ui-components/view/View.svelte';
 	import ViewContent from '$lib/ui-components/view/ViewContent.svelte';
@@ -18,7 +19,8 @@
 		'/elements': Elements,
 		'/logs': Logs,
 		'/network': Network,
-		'/storage': Storage
+		'/storage': Storage,
+		'/console': Console
 	};
 </script>
 
@@ -57,6 +59,15 @@
 			class:disabled={$device === null}
 		>
 			Storage
+		</a>
+		<a
+			href="/dev-tools/console"
+			use:link
+			class="nav-link"
+			class:active={$location === '/dev-tools/console'}
+			class:disabled={$device === null}
+		>
+			Console
 		</a>
 	</ViewHeader>
 	<ViewContent>

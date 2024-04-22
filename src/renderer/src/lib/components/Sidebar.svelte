@@ -33,6 +33,14 @@
 		>
 			Storage
 		</a>
+		<a
+			href="/dev-tools/console"
+			use:link
+			class:active={$location === '/dev-tools/console'}
+			class:disabled={$device === null}
+		>
+			Console
+		</a>
 
 		<div class="divider named">Apps</div>
 		<a href="/apps/store" use:link class:active={$location === '/apps/store'}>App Store</a>
@@ -99,6 +107,7 @@
 	.nav > a:hover {
 		border-color: var(--accent-primary);
 	}
+
 	.nav > a.disabled {
 		opacity: 0.4;
 		pointer-events: none;

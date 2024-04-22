@@ -35,7 +35,8 @@
 			const deviceRequiredPages = [
 				'/dev-tools/elements',
 				'/dev-tools/network',
-				'/dev-tools/storage'
+				'/dev-tools/storage',
+				'/dev-tools/console'
 			];
 			if (val === null && deviceRequiredPages.includes($location)) {
 				push('/dashboard');
