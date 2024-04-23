@@ -78,10 +78,10 @@ export function registerChannelHandlers() {
 		database.networkRequests.getRequestById(id)
 	);
 
-	ipcMain.handle(Channel.ExecuteConsoleCommand, (_, command: string) =>
+	ipcMain.handle(Channel.ExecuteConsoleCommand, (_, command: string, parseDepth = 0) =>
 		server.sendRequest<ConsoleCommandResPayload>({
 			type: MessageType.ExecuteConsoleCommand,
-			data: { command }
+			data: { command, parseDepth }
 		})
 	);
 }

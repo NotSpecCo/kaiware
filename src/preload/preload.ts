@@ -49,8 +49,11 @@ export const api = {
 	async getNetworkRequestById(id: number): Promise<NetworkRequest> {
 		return ipcRenderer.invoke(Channel.GetNetworkRequestById, id);
 	},
-	async executeConsoleCommand(command: string): Promise<ConsoleCommandResPayload> {
-		return ipcRenderer.invoke(Channel.ExecuteConsoleCommand, command);
+	async executeConsoleCommand(
+		command: string,
+		parseDepth = 0
+	): Promise<ConsoleCommandResPayload> {
+		return ipcRenderer.invoke(Channel.ExecuteConsoleCommand, command, parseDepth);
 	},
 
 	// Events

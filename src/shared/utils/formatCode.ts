@@ -1,11 +1,11 @@
 import prettierHtml from 'prettier/plugins/html';
 import prettier from 'prettier/standalone';
 
-export function formatCode(code: string, language: 'html' | 'json'): Promise<string> {
+export function formatCode(code: string, language: 'html' | 'json', spaces = 2): Promise<string> {
 	return prettier.format(code, {
 		parser: language,
 		useTabs: false,
-		tabWidth: 4,
+		tabWidth: spaces,
 		plugins: language === 'html' ? [prettierHtml] : []
 	});
 }

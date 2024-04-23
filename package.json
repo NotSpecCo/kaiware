@@ -35,7 +35,7 @@
 		"@cliqz-oss/firefox-client": "^0.3.1",
 		"@electron-toolkit/preload": "^3.0.0",
 		"@electron-toolkit/utils": "^3.0.0",
-		"@nothing-special/kaiware-lib": "^0.9.0",
+		"@nothing-special/kaiware-lib": "^0.11.0",
 		"dayjs": "^1.11.10",
 		"express": "^4.19.2",
 		"express-ws": "^5.0.2",

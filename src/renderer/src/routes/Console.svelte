@@ -14,7 +14,7 @@
 		if ((ev as KeyboardEvent).key !== 'Enter' || !command) return;
 
 		(ev.target as HTMLInputElement).value;
-		const result = await window.api.executeConsoleCommand(command);
+		const result = await window.api.executeConsoleCommand(command, 1);
 		console.log(result);
 
 		if (result.error) {
