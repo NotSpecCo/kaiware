@@ -56,18 +56,34 @@ export const database = {
 		}
 	},
 	networkRequests: {
-		getRequests: async (): Promise<NetworkRequest[]> => {
+		getRequests: async (
+			_: Electron.IpcMainInvokeEvent,
+			returnFullObject = false
+		): Promise<NetworkRequest[]> => {
 			const requests = await db<NetworkRequestEntity>('network_requests')
-				.select('*')
+				.select(returnFullObject ? '*' : '*') // TODO: Implement returnFullObject
 				.orderBy('startTime', 'desc');
 
 			return requests.map(mappers.networkRequestEntityToNetworkRequest);
+		},
+		getRequestById: async (id: number): Promise<NetworkRequest | null> => {
+			const request = await db<NetworkRequestEntity>('network_requests')
+				.where('id', id)
+				.first();
+
+			return request ? mappers.networkRequestEntityToNetworkRequest(request) : null;
 		},
 		updateRequest: async (requestData: NetworkRequest): Promise<NetworkRequest> => {
 			const mappedRequest = mappers.networkRequestToNetworkRequestEntity(requestData);
 			const existingRequest = (await db<NetworkRequestEntity>('network_requests')).find(
 				(a) => a.requestId === requestData.requestId
 			);
+
+			const startTime = mappedRequest.startTime ?? existingRequest?.startTime;
+			const endTime = mappedRequest.endTime ?? existingRequest?.endTime;
+			if (startTime && endTime) {
+				mappedRequest.duration = endTime - startTime;
+			}
 
 			let response: NetworkRequestEntity;
 

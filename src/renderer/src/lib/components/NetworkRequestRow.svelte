@@ -6,17 +6,16 @@
 	export let networkRequest: NetworkRequest;
 
 	const displayDate = dayjs(networkRequest.startTime).format('LTS');
-
-	let duration: number | null = null;
-	$: duration = networkRequest.endTime ? networkRequest.endTime - networkRequest.startTime : null;
 </script>
 
-<div class="network-request-row">
+<div class="network-request-row" on:click on:keydown role="link" tabindex="0">
 	<div class="date">{displayDate}</div>
 	<div class="method">{networkRequest.method}</div>
 	<div class="url">{networkRequest.url}</div>
 	<div class="size">{formatBytes(networkRequest.responseSize)}</div>
-	<div class="duration">{`${duration} ms`}</div>
+	{#if networkRequest.duration}
+		<div class="duration">{`${networkRequest.duration} ms`}</div>
+	{/if}
 	<div
 		class="status"
 		class:success={networkRequest.lifecycleStatus === 'success'}
@@ -48,7 +47,7 @@
 		cursor: pointer;
 	}
 	.network-request-row:hover {
-		background-color: rgba(0, 0, 0, 0.05);
+		background-color: rgba(0, 0, 0, 0.1);
 	}
 
 	div.success {

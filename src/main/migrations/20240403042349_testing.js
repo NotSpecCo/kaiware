@@ -22,6 +22,7 @@ export const up = function (knex) {
 			table.string('body').nullable();
 			table.integer('startTime').nullable();
 			table.integer('endTime').nullable();
+			table.integer('duration').nullable();
 			table.integer('responseStatus').nullable();
 			table.string('responseHeaders').nullable();
 			table.string('responseBody').nullable();
