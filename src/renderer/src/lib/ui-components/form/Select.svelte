@@ -23,7 +23,7 @@
 <div class="root">
 	<div class="overlay">
 		<div class="display-text" class:empty={!value}>{displayText}</div>
-		<Icon size={IconSize.Smallest} color="var(--text-secondary)"><IconArrow /></Icon>
+		<Icon size={IconSize.Smallest} color="var(--secondary-text-color)"><IconArrow /></Icon>
 	</div>
 	<select class="select" bind:value on:change={handleChange}>
 		<option value=""></option>
@@ -43,23 +43,23 @@
 		padding: 5px 10px 5px 15px;
 		display: flex;
 		align-items: center;
-		background-color: var(--background-light);
+		background-color: var(--panel-background-color);
 		pointer-events: none;
 		z-index: 10;
-		border-radius: 15px;
+		border-radius: var(--radius);
 		height: 30px;
 	}
 
 	.root:focus-within .overlay {
-		border-color: var(--accent-primary);
+		border-color: var(--accent-color);
 	}
 
 	.display-text {
-		color: var(--text-primary);
+		color: var(--primary-text-color);
 		margin-right: 7px;
 	}
 	.display-text.empty {
-		color: var(--text-secondary);
+		color: var(--secondary-text-color);
 	}
 
 	.select {

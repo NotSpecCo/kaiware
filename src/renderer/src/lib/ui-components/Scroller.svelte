@@ -67,11 +67,11 @@
 	}
 	.container.horizontal:not(.hide-left)::before {
 		left: 0;
-		background: linear-gradient(90deg, var(--background-light), transparent);
+		background: linear-gradient(90deg, var(--panel-background-color), transparent);
 	}
 	.container.horizontal:not(.hide-right)::after {
 		right: 0;
-		background: linear-gradient(90deg, transparent, var(--background-light));
+		background: linear-gradient(90deg, transparent, var(--panel-background-color));
 	}
 
 	.container.vertical::before,
@@ -87,11 +87,11 @@
 	}
 	.container.vertical:not(.hide-top)::before {
 		top: 0;
-		background: linear-gradient(var(--background-light), transparent);
+		background: linear-gradient(var(--panel-background-color), transparent);
 	}
 	.container.vertical:not(.hide-bottom)::after {
 		bottom: 0;
-		background: linear-gradient(transparent, var(--background-light));
+		background: linear-gradient(transparent, var(--panel-background-color));
 	}
 
 	.horizontal .content {

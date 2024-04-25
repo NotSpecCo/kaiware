@@ -86,7 +86,7 @@
 <div class="root">
 	<div class="container" bind:this={htmlContainer}>
 		<!-- eslint-disable-next-line svelte/no-at-html-tags-->
-		<Code>{@html htmlContent}</Code>
+		<Code fullHeight>{@html htmlContent}</Code>
 	</div>
 	{#if elementStyles}
 		<div class="styles-container">
@@ -121,16 +121,17 @@
 
 	.styles-container {
 		margin-left: 20px;
-		background-color: var(--background-dark);
+		background-color: var(--main-background-color);
 		display: flex;
 		flex-direction: column;
-		border-radius: 6px;
+		border-radius: var(--radius);
+		overflow: hidden;
 	}
 
 	.styles-container > .header {
 		font-size: 1.6rem;
 		font-weight: 600;
-		color: var(--text-primary);
+		color: var(--primary-text-color);
 		padding: 10px 15px;
 		display: flex;
 		justify-content: space-between;
@@ -145,7 +146,7 @@
 		flex: 1;
 		overflow-y: auto;
 		padding: 0px 15px 10px 15px;
-		background-color: var(--background-dark);
+		background-color: var(--main-background-color);
 	}
 
 	.style-row {
@@ -155,23 +156,23 @@
 		font-family: monospace;
 		font-size: 1.2rem;
 		padding: 5px 0;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+		border-bottom: 1px solid var(--divider-color);
 	}
 	.style-row:last-of-type {
 		border-bottom: none;
 	}
 
 	.name {
-		color: var(--text-secondary);
+		color: var(--secondary-text-color);
 		margin-right: 10px;
 		margin-bottom: 2px;
 	}
 
 	:global(.hljs-name:hover) {
 		cursor: pointer;
-		border-bottom: 2px solid var(--accent-primary);
+		border-bottom: 2px solid var(--accent-color);
 	}
 	:global(.active-element) {
-		border-bottom: 2px solid var(--accent-primary);
+		border-bottom: 2px solid var(--accent-color);
 	}
 </style>

@@ -7,6 +7,6 @@
 		flex: 1;
 		overflow-x: hidden;
 		overflow-y: auto;
-		padding: 10px 15px;
+		padding: 10px 15px 15px 15px;
 	}
 </style>

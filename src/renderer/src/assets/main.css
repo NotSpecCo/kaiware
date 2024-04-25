@@ -1,29 +1,38 @@
 :root {
-	--background-dark: #181d26;
-	--background-light: #1f2633;
-	--accent-primary: #63ccca;
-	--accent-secondary: #8963ba;
+	--main-background-color: hsla(219, 23%, 12%, 100%);
+	--panel-background-color: hsla(219, 24%, 16%, 100%);
 
-	--text-primary: rgba(255, 255, 255, 0.88);
-	--text-secondary: rgba(255, 255, 255, 0.5);
-	--text-tertiary: rgba(255, 255, 255, 0.3);
-	--text-accent: var(--accent-primary);
+	--accent-color: hsla(179, 51%, 59%, 100%);
+	--error-color: hsla(358, 65%, 55%, 100%);
+	--warning-color: hsla(45, 93%, 58%, 100%);
+	--success-color: hsla(118, 49%, 48%, 100%);
+	--divider-color: hsla(0, 0%, 100%, 10%);
 
-	--text-warning: #f8c630;
-	--text-error: #ef8b4f;
-	--text-error: #d64045;
-	--text-success: #42b63e;
+	--primary-text-color: hsla(0, 0%, 100%, 88%);
+	--secondary-text-color: hsla(0, 0%, 100%, 50%);
+	--tertiary-text-color: hsla(0, 0%, 100%, 30%);
+	--accent-text-color: hsla(179, 51%, 59%, 100%);
+
+	--radius: 6px;
+	--animation-speed: 300ms;
+	--regular-font-weight: 400;
+	--bold-font-weight: 600;
+	--base-font-size: 10px;
+
+	font-size: var(--base-font-size);
+	font-weight: var(--regular-font-weight);
+	color: var(--primary-text-color);
 }
 
 html {
-	font-size: 10px;
+	font-size: var(--base-font-size);
 }
 body {
 	font-size: 1.4rem;
 	min-height: 100vh;
 	min-width: 100vw;
-	color: var(--text-primary);
-	background: var(--background-dark);
+	color: var(--primary-text-color);
+	background: var(--main-background-color);
 	line-height: 1.4;
 	font-family:
 		'SF Pro',

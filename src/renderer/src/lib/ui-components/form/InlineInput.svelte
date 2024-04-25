@@ -20,13 +20,13 @@
 		padding: 3px 5px;
 		border: none;
 		background-color: inherit;
-		color: var(--text-primary);
+		color: var(--primary-text-color);
 	}
 
 	input::placeholder {
-		color: var(--text-secondary);
+		color: var(--secondary-text-color);
 	}
 	input:focus {
-		outline: var(--accent-primary) solid 1px;
+		outline: var(--accent-color) solid 1px;
 	}
 </style>

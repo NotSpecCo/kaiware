@@ -85,7 +85,7 @@
 	}
 	.nav-link.active,
 	.nav-link:hover {
-		border-color: var(--accent-primary);
+		border-color: var(--accent-color);
 	}
 	.nav-link.disabled {
 		opacity: 0.4;

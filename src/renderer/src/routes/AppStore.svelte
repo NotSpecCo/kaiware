@@ -142,10 +142,10 @@
 	}
 
 	.author {
-		color: var(--text-secondary);
+		color: var(--secondary-text-color);
 	}
 
 	.description {
-		/* color: var(--text-secondary); */
+		/* color: var(--secondary-text-color); */
 	}
 </style>

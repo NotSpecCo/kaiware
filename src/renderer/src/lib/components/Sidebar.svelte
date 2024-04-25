@@ -74,7 +74,7 @@
 		font-size: 1.2rem;
 		font-weight: 600;
 		margin-bottom: 5px;
-		color: var(--text-secondary);
+		color: var(--secondary-text-color);
 	}
 
 	.logo {
@@ -102,10 +102,10 @@
 		text-decoration: none;
 	}
 	.nav > a.active {
-		border-color: var(--accent-primary);
+		border-color: var(--accent-color);
 	}
 	.nav > a:hover {
-		border-color: var(--accent-primary);
+		border-color: var(--accent-color);
 	}
 
 	.nav > a.disabled {

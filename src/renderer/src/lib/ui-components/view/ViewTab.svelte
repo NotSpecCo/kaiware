@@ -31,6 +31,6 @@
 		left: 0px;
 		width: 100%;
 		height: 3px;
-		background-color: var(--accent-primary);
+		background-color: var(--accent-color);
 	}
 </style>

@@ -51,13 +51,13 @@
 	}
 
 	div.success {
-		color: var(--text-success);
+		color: var(--success-color);
 	}
 	div.warning {
-		color: var(--text-warning);
+		color: var(--warning-color);
 	}
 	div.error {
-		color: var(--text-error);
+		color: var(--error-color);
 	}
 
 	.network-request-row > div {
@@ -68,7 +68,7 @@
 	}
 
 	.method {
-		color: var(--accent-primary);
+		color: var(--accent-color);
 	}
 
 	.url {
@@ -77,6 +77,6 @@
 
 	.size,
 	.duration {
-		color: var(--text-secondary);
+		color: var(--secondary-text-color);
 	}
 </style>

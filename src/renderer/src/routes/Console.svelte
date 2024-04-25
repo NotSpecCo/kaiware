@@ -36,7 +36,7 @@
 	</div>
 	<div class="code">
 		<!-- eslint-disable-next-line svelte/no-at-html-tags-->
-		<Code>{@html responseHtml}</Code>
+		<Code fullHeight>{@html responseHtml}</Code>
 	</div>
 </div>
 
@@ -45,13 +45,14 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-		padding-bottom: 15px;
+		/* padding-bottom: 5px; */
 	}
 
 	.console {
 		margin-bottom: 15px;
 	}
 	.code {
-		padding-bottom: 15px;
+		flex: 1;
+		overflow: hidden;
 	}
 </style>

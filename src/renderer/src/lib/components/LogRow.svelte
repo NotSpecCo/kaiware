@@ -56,13 +56,13 @@
 		border-radius: 2px;
 	}
 	.level-bar.info {
-		background-color: var(--text-tertiary);
+		background-color: var(--tertiary-text-color);
 	}
 	.level-bar.warn {
-		background-color: var(--text-warning);
+		background-color: var(--warning-color);
 	}
 	.level-bar.error {
-		background-color: var(--text-error);
+		background-color: var(--error-color);
 	}
 
 	.content {
@@ -72,7 +72,7 @@
 
 	.metadata {
 		display: flex;
-		color: var(--text-tertiary);
+		color: var(--tertiary-text-color);
 	}
 
 	.preview {

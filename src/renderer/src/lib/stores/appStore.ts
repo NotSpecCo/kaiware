@@ -1,4 +1,4 @@
-import { StorageKey, getStorageItem, setStorageItem } from '$lib/utils/storage';
+import { Storage } from '$lib/utils/storage';
 import type { StoreApp } from '$shared/types/StoreApp';
 import type { StoreCategory } from '$shared/types/StoreCategory';
 import { get, writable } from 'svelte/store';
@@ -19,7 +19,7 @@ function createStore() {
 	}
 
 	async function fetchStoreData(forceRefresh = false): Promise<StoreDb> {
-		const cachedStoreData = getStorageItem<StoreDb>(StorageKey.StoreDb);
+		const cachedStoreData = Storage.local.get<StoreDb>('store-db');
 
 		if (
 			cachedStoreData &&
@@ -76,7 +76,7 @@ function createStore() {
 			generatedAt: data.generated_at
 		};
 
-		setStorageItem(StorageKey.StoreDb, storeData);
+		Storage.local.set('store-db', storeData);
 		return storeData;
 	}
 

@@ -11,11 +11,11 @@
 <div class="root">
 	<div class="device">
 		{#if $device?.connectionType === 'usb'}
-			<Icon size={IconSize.Smallest} color="var(--text-success)"><IconUsb /></Icon>
+			<Icon size={IconSize.Smallest} color="var(--success-color)"><IconUsb /></Icon>
 		{:else if $device?.connectionType === 'wifi'}
-			<Icon size={IconSize.Smallest} color="var(--text-success)"><IconWifi /></Icon>
+			<Icon size={IconSize.Smallest} color="var(--success-color)"><IconWifi /></Icon>
 		{:else}
-			<Icon size={IconSize.Smallest} color="var(--text-tertiary)"><IconWifi /></Icon>
+			<Icon size={IconSize.Smallest} color="var(--tertiary-text-color)"><IconWifi /></Icon>
 		{/if}
 		<div class="name">{$device?.name ?? 'No device connected'}</div>
 	</div>
@@ -26,7 +26,7 @@
 <style>
 	.root {
 		font-size: 1.4rem;
-		color: var(--text-secondary);
+		color: var(--secondary-text-color);
 		padding: 5px 10px;
 		display: flex;
 	}
@@ -49,6 +49,6 @@
 		text-decoration: none;
 	}
 	.version:hover {
-		border-color: var(--accent-primary);
+		border-color: var(--accent-color);
 	}
 </style>

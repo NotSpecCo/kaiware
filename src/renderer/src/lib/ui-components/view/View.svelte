@@ -4,12 +4,12 @@
 
 <style>
 	.root {
-		background-color: var(--background-light);
+		background-color: var(--panel-background-color);
 		height: 100%;
 		width: 100%;
-		border-radius: 24px 0 0 24px;
+		border-radius: var(--radius) 0 0 var(--radius);
 		overflow: hidden;
-		border: 1px solid rgba(255, 255, 255, 0.05);
+		border: 1px solid var(--panel-border-color);
 		display: flex;
 		flex-direction: column;
 	}
