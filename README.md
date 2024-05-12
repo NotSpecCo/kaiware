@@ -1,8 +1,20 @@
 # Kaiware
 
-A desktop application to manage your KaiOS phone. Not at all finished or bug free. Still just playing around.
+A desktop application that lets you remotely debug apps on your KaiOS device. Still in the exploration and experimentation phase, so expect bugs and changes.
 
 ![Screenshot](/screenshots/screenshot-elements.png?raw=true)
+
+### Features
+
+The purpose of Kaiware is to provide remote debugging tools for platforms that may not have access to them.
+
+- **HTML Element Inspector:** Inspect HTML elements and computed CSS styles within your application. Supports real-time editing of CSS styles, with immediate reflection on your running application.
+- **Logging:** Display debug, info, warning, and error logs from your app. The Kaiware client shims the global `console` object to capture log events and sends them to the app on your desktop. This functionality can be disabled, and you can instead use the dedicated Kaiware logger.
+- **Network Requests:** Monitor and analyze network requests made from your device, including all the information and stats you'd expect to see.
+- **Storage:** View what's in your app's session and local storage. Future updates will include support for IndexedDB and other storage types.
+- **Console:** Direct interaction with the global `window` object, enabling data manipulation, function execution, and other JavaScript operations directly from the console.
+
+*Note: Some features are currently in basic form but are actively being improved.*
 
 ### Demo
 
@@ -16,18 +28,5 @@ A desktop application to manage your KaiOS phone. Not at all finished or bug fre
 ### Development
 
 ```bash
-$ npm run dev
-```
-
-### Build
-
-```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
+npm run dev
 ```
